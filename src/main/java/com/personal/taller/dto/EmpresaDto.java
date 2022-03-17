@@ -1,11 +1,8 @@
 package com.personal.taller.dto;
 
-import org.bson.types.ObjectId;
-//import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import javax.persistence.*;
-import java.util.UUID;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "empresa")
@@ -20,7 +17,29 @@ public class EmpresaDto {
     @Column(name = "rut")
     private String rut;
 
+    //@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    //@JoinColumn(name = "users_id")
+    //private UsersDto users;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Column(name = "proveedor")
+    private Set<ProveedorDto> proveedor;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Column(name = "repuesto")
+    private Set<RepuestoDto> repuesto;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Column(name = "ordenTrabajo")
+    private Set<OrdenTrabajoDto> ordenTrabajo;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Column(name = "clientes")
+    private Set<ClienteDto> clientes;
+
+
     public EmpresaDto(){}
+
     public long getId() {
         return id;
     }
@@ -52,4 +71,12 @@ public class EmpresaDto {
     public void setRut(String rut) {
         this.rut = rut;
     }
+
+    /*public UsersDto getUsers() {
+        return users;
+    }
+
+    public void setUsers(UsersDto users) {
+        this.users = users;
+    }*/
 }

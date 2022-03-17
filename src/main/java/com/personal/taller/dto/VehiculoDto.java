@@ -1,9 +1,11 @@
 package com.personal.taller.dto;
 
 //import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+//import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 //@Document("vehiculo")
 @Entity
@@ -32,6 +34,15 @@ public class VehiculoDto {
     private String color;
     @Column(name = "kilometraje")
     private String kilometraje;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Column(name = "cliente")
+    private Set<ClienteDto> cliente;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Column(name = "ordenTrabajo")
+    private Set<OrdenTrabajoDto> ordenTrabajo;
+
 
     public VehiculoDto(){}
 

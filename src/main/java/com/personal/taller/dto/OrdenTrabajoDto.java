@@ -1,11 +1,12 @@
 package com.personal.taller.dto;
 
 //import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+//import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 //@Document("ordenTrabajo")
 @Entity
@@ -24,20 +25,31 @@ public class OrdenTrabajoDto {
     private String rutCliente;
     @Column(name = "patenteVehiculo")
     private String patenteVehiculo;
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @Column(name = "detalle")
-    private List<DetalleDto> detalle;
-
     @Column(name = "codigo")
-    //@ManyToMany
     private String codigo;
     @Column(name = "valorOt")
     private String valorOt;
 
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "detalle")
+    private Set<DetalleDto> detalle;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vehiculo_id")
+    private VehiculoDto vehiculo;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id")
+    private ClienteDto cliente;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "empresa_id")
+    private EmpresaDto empresa;
+
     public OrdenTrabajoDto(){}
 
-    public OrdenTrabajoDto(long id, int habilitado, String numeroOrden, String fechaIngreso, String rutCliente, String patenteVehiculo, List<DetalleDto> detalle, String codigoRepuestos){
+    public OrdenTrabajoDto(long id, int habilitado, String numeroOrden, String fechaIngreso, String rutCliente, String patenteVehiculo, Set<DetalleDto> detalle, String codigoRepuestos){
         super();
         this.id= id;
         this.numeroOrden = numeroOrden;
@@ -97,11 +109,11 @@ public class OrdenTrabajoDto {
         this.patenteVehiculo = patenteVehiculo;
     }
 
-    public List<DetalleDto> getDetalle() {
+    public Set<DetalleDto> getDetalle() {
         return detalle;
     }
 
-    public void setDetalle(List<DetalleDto> detalle) {
+    public void setDetalle(Set<DetalleDto> detalle) {
         this.detalle = detalle;
     }
 

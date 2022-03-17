@@ -1,26 +1,31 @@
 package com.personal.taller.dto;
 
-import org.bson.types.ObjectId;
-//import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-public class LoginDto {
+public class UsersDto {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(name = "empresa")
-    private ObjectId empresa;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "empresa_id")
+    private EmpresaDto empresa;
+
     @Column(name = "users")
     private String users;
+
     @Column(name = "pass")
     private String pass;
 
-    public LoginDto(){}
+    @Column(name = "rol")
+    private String rol;
+
+    @Column(name = "habilitado")
+    private int habilitado;
+
+    public UsersDto(){}
 
     public long getId() {
         return id;
@@ -30,11 +35,11 @@ public class LoginDto {
         this.id = id;
     }
 
-    public ObjectId getEmpresa() {
+    public EmpresaDto getEmpresa() {
         return empresa;
     }
 
-    public void setEmpresa(ObjectId empresa) {
+    public void setEmpresa(EmpresaDto empresa) {
         this.empresa = empresa;
     }
 
@@ -52,5 +57,21 @@ public class LoginDto {
 
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    public int getHabilitado() {
+        return habilitado;
+    }
+
+    public void setHabilitado(int habilitado) {
+        this.habilitado = habilitado;
     }
 }

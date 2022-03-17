@@ -1,10 +1,11 @@
 package com.personal.taller.dto;
 
 //import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+//import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 //@Document("repuesto")
 @Entity
@@ -30,9 +31,18 @@ public class RepuestoDto {
     @Column(name = "valor")
     private long valor;
 
-    //@ManyToMany
-    @Column(name = "numeroOrden")
-    private String numeroOrden;
+    @OneToOne
+    @JoinColumn(name = "detalle_id")
+    private DetalleDto detalle;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "empresa_id")
+    private EmpresaDto empresa;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Column(name = "proveedor")
+    private Set<ProveedorDto> proveedor;
+
 
     public RepuestoDto(){}
 
@@ -122,11 +132,5 @@ public class RepuestoDto {
         this.valor = valor;
     }
 
-    public String getNumeroOrden() {
-        return numeroOrden;
-    }
 
-    public void setNumeroOrden(String numeroOrden) {
-        this.numeroOrden = numeroOrden;
-    }
 }

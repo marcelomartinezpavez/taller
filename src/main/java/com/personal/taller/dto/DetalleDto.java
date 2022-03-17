@@ -16,9 +16,9 @@ public class DetalleDto {
     @Column(name = "recargo")
     private long recargo;
 
-    //@ManyToOne
-    //@Column(name = "ordenTrabajoDto")
-    //private OrdenTrabajoDto ordenTrabajoDto;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ordenTrabajo_id")
+    private OrdenTrabajoDto ordenTrabajo;
 
     public DetalleDto(){}
 

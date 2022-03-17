@@ -4,6 +4,8 @@ package com.personal.taller.dto;
 
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 //@Document("clientes")
 
@@ -31,6 +33,18 @@ public class ClienteDto {
     private String telefono;
     @Column(name = "email")
     private String email;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "ordenTrabajo")
+    private Set<OrdenTrabajoDto> ordenTrabajo;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "vehiculo")
+    private Set<VehiculoDto> vehiculo;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "empresa_id")
+    private EmpresaDto empresa;
 
     public ClienteDto(){}
 
@@ -127,5 +141,29 @@ public class ClienteDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Set<OrdenTrabajoDto> getOrdenTrabajo() {
+        return ordenTrabajo;
+    }
+
+    public void setOrdenTrabajo(Set<OrdenTrabajoDto> ordenTrabajo) {
+        this.ordenTrabajo = ordenTrabajo;
+    }
+
+    public Set<VehiculoDto> getVehiculo() {
+        return vehiculo;
+    }
+
+    public void setVehiculo(Set<VehiculoDto> vehiculo) {
+        this.vehiculo = vehiculo;
+    }
+
+    public EmpresaDto getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(EmpresaDto empresa) {
+        this.empresa = empresa;
     }
 }

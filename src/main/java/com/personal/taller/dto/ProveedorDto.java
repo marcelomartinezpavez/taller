@@ -1,9 +1,10 @@
 package com.personal.taller.dto;
 
 //import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+//import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
+import java.util.Set;
 
 //@Document("proveedores")
 @Entity
@@ -30,6 +31,15 @@ public class ProveedorDto {
     private String telefono;
     @Column(name = "email")
     private String email;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "empresa_id")
+    private EmpresaDto empresa;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Column(name = "repuesto")
+    private Set<RepuestoDto> repuesto;
+
 
     public ProveedorDto(){}
 
