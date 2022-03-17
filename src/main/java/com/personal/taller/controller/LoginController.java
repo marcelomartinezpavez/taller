@@ -29,16 +29,31 @@ public class LoginController {
     @PostMapping(path = "/",produces = "application/json")
     @CrossOrigin(origins = "*")
     public @ResponseBody
-    LoginResponse login(@RequestBody Users newUsers) {
+    ResponseEntity<UsersDto> login(@RequestBody Users newUsers) {
         Optional<UsersDto> resp = loginRepository.findByUsersAndPass(newUsers.getUsers(), newUsers.getPass());
-        UsersDto usersDto = resp.get();
-        Optional<EmpresaDto> empresa = empresaRepository.findById(usersDto.getId());
-        LoginResponse loginResponse = new LoginResponse();
-        if (empresa.isPresent()){
-            loginResponse.setUsers(usersDto);
-            loginResponse.setEmpresa(empresa.get());
+        UsersDto usersDto = new UsersDto();
+        EmpresaDto empresaDto = new EmpresaDto();
+        if(!resp.isPresent()){
+            return new ResponseEntity("Error al validar usuario",HttpStatus.BAD_REQUEST);
+        }else{
+            Optional<EmpresaDto> empresa = empresaRepository.findById(resp.get().getEmpresa().getId());
+            //LoginResponse loginResponse = new LoginResponse();
+            usersDto.setUsers(resp.get().getUsers());
+            usersDto.setRol(resp.get().getRol());
+            usersDto.setPass(resp.get().getPass());
+            usersDto.setId(resp.get().getId());
+            usersDto.setHabilitado(resp.get().getHabilitado());
+            //loginResponse.setUsers(usersDto);
+            if (empresa.isPresent()){
+                empresaDto.setRut(empresa.get().getRut());
+                empresaDto.setId(empresa.get().getId());
+                empresaDto.setDireccion(empresa.get().getDireccion());
+                empresaDto.setNombre(empresa.get().getNombre());
+                usersDto.setEmpresa(empresaDto);
+                //loginResponse.setEmpresa(empresaDto);
+            }
+            return new ResponseEntity<UsersDto>(usersDto, HttpStatus.OK);
         }
-        return loginResponse;
     }
 
     @PostMapping(path = "/create",produces = "application/json")
@@ -81,7 +96,7 @@ public class LoginController {
         loginResponse.setUsers(users);
         loginResponse.setEmpresa(empresaDto);
 
-        return new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.OK);
+        return new ResponseEntity(loginResponse, HttpStatus.OK);
     }
 
 }
