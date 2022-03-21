@@ -21,6 +21,7 @@ public class ClienteDto {
     private String nombre;
     @Column(name = "apellido")
     private String apellido;
+    //@Id
     @Column(name = "rut")
     private String rut;
     @Column(name = "direccion")
@@ -34,11 +35,11 @@ public class ClienteDto {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER)
     @Column(name = "ordenTrabajo")
     private Set<OrdenTrabajoDto> ordenTrabajo;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER)
     @Column(name = "vehiculo")
     private Set<VehiculoDto> vehiculo;
 

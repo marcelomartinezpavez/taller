@@ -39,9 +39,13 @@ public class OrdenTrabajoDto {
     @JoinColumn(name = "vehiculo_id")
     private VehiculoDto vehiculo;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id")
-    private ClienteDto cliente;
+    //@OneToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(foreignKey, name = "cliente_id" )
+    //private ClienteDto cliente;
+
+    //@OneToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "rut_cliente")
+    //private ClienteDto rut_cliente;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id")
