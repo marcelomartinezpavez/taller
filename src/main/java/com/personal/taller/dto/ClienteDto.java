@@ -28,7 +28,7 @@ public class ClienteDto {
     private String direccion;
     @Column(name = "comuna")
     private String comuna;
-    @Column(name = "cuidad")
+    @Column(name = "ciudad")
     private String ciudad;
     @Column(name = "telefono")
     private String telefono;

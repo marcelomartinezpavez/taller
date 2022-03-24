@@ -1,66 +1,29 @@
-package com.personal.taller.dto;
+package com.personal.taller.request;
 
-//import org.springframework.data.annotation.Id;
-//import org.springframework.data.mongodb.core.mapping.Document;
+import com.personal.taller.dto.ClienteDto;
+import com.personal.taller.dto.OrdenTrabajoDto;
 
-import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
-//@Document("vehiculo")
-@Entity
-@Table(name = "vehiculo")
-public class VehiculoDto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class VehiculoRequest {
+
     private long id;
-    @Column(name = "habilitado")
     private int habilitado;
-    @Column(name = "marca")
     private String marca;
-    @Column(name = "modelo")
     private String modelo;
-    @Column(name = "patente")
     private String patente;
-    @Column(name = "anio")
     private String anio;
-    @Column(name = "numeroMotor")
     private String numeroMotor;
-    @Column(name = "numeroChasis")
     private String numeroChasis;
-    @Column(name = "rutDueno")
     private String rutDueno;
-    @Column(name = "color")
     private String color;
-    @Column(name = "kilometraje")
     private String kilometraje;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @Column(name = "cliente")
+    private long id_empresa;
+
     private Set<ClienteDto> cliente;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @Column(name = "ordenTrabajo")
     private Set<OrdenTrabajoDto> ordenTrabajo;
-
-
-    public VehiculoDto(){}
-
-    public VehiculoDto(long id, int habilitado, String marca, String modelo, String patente, String anio,
-                        String numeroMotor, String numeroChasis, String rutDueno, String color, String kilometraje) {
-        super();
-        this.id = id;
-        this.habilitado = habilitado;
-        this.marca = marca;
-        this.modelo = modelo;
-        this.patente = patente;
-        this.anio = anio;
-        this.numeroMotor = numeroMotor;
-        this.numeroChasis = numeroChasis;
-        this.rutDueno = rutDueno;
-        this.color = color;
-        this.kilometraje = kilometraje;
-    }
 
     public long getId() {
         return id;
@@ -164,5 +127,13 @@ public class VehiculoDto {
 
     public void setOrdenTrabajo(Set<OrdenTrabajoDto> ordenTrabajo) {
         this.ordenTrabajo = ordenTrabajo;
+    }
+
+    public long getId_empresa() {
+        return id_empresa;
+    }
+
+    public void setId_empresa(long id_empresa) {
+        this.id_empresa = id_empresa;
     }
 }
