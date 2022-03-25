@@ -36,7 +36,6 @@ public class ClienteController {
          *
          * *****/
         System.out.println("getAll");
-        ClienteResponse clienteResponse = new ClienteResponse();
         List<ClienteDto> resp = clienteRepository.findAllHabilitado();
         List<ClienteDto> clienteDtoList = new ArrayList<ClienteDto>();
         for (int i = 0; i<resp.size();i++){
@@ -167,7 +166,7 @@ public class ClienteController {
         try {
             clienteRepository.save(cliente);
         }catch (Exception e){
-            throw e;
+            return new ResponseEntity("Error interno al crear Cliente", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<ClienteDto>(cliente, HttpStatus.CREATED);
     }
@@ -230,7 +229,7 @@ public class ClienteController {
         try {
             clienteRepository.save(cliente);
         }catch (Exception e){
-            throw e;
+            return new ResponseEntity("Error interno al eliminar cliente",HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity(cliente, HttpStatus.OK);
 

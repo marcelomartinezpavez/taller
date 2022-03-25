@@ -1,61 +1,18 @@
-package com.personal.taller.dto;
+package com.personal.taller.request;
 
-//import org.springframework.data.annotation.Id;
-//import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.persistence.*;
-import java.util.Set;
-
-//@Document("proveedores")
-@Entity
-@Table(name = "proveedores")
-public class ProveedorDto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class ProveedorRequest {
     private long id;
-    @Column(name = "habilitado")
     private int habilitado;
-    @Column(name = "nombre")
     private String nombre;
-    @Column(name = "apellido")
     private String apellido;
-    @Column(name = "rut")
     private String rut;
-    @Column(name = "direccion")
     private String direccion;
-    @Column(name = "comuna")
     private String comuna;
-    @Column(name = "cuidad")
     private String ciudad;
-    @Column(name = "telefono")
     private String telefono;
-    @Column(name = "email")
     private String email;
+    private long idEmpresa;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "empresa_id")
-    private EmpresaDto empresa;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    @Column(name = "repuesto")
-    private Set<RepuestoDto> repuesto;
-
-
-    public ProveedorDto(){}
-
-    public ProveedorDto(long id, int habilitado, String nombre, String apellido, String direccion, String comuna,
-                      String ciudad, String telefono, String email) {
-        super();
-        this.id = id;
-        this.habilitado = habilitado;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.direccion = direccion;
-        this.comuna = comuna;
-        this.ciudad = ciudad;
-        this.telefono = telefono;
-        this.email = email;
-    }
 
     public long getId() {
         return id;
@@ -137,19 +94,11 @@ public class ProveedorDto {
         this.email = email;
     }
 
-    public EmpresaDto getEmpresa() {
-        return empresa;
+    public long getIdEmpresa() {
+        return idEmpresa;
     }
 
-    public void setEmpresa(EmpresaDto empresa) {
-        this.empresa = empresa;
-    }
-
-    public Set<RepuestoDto> getRepuesto() {
-        return repuesto;
-    }
-
-    public void setRepuesto(Set<RepuestoDto> repuesto) {
-        this.repuesto = repuesto;
+    public void setIdEmpresa(long idEmpresa) {
+        this.idEmpresa = idEmpresa;
     }
 }
