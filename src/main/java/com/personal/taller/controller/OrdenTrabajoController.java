@@ -66,6 +66,42 @@ public class OrdenTrabajoController {
         }
     }
 
+    @GetMapping(value = "/patente/{patente}", produces = "application/json")
+    @CrossOrigin(origins = "*")
+    public @ResponseBody
+    ResponseEntity getOrdenTrabajoPatente(@PathVariable String patente) {
+        try {
+            List<OrdenTrabajoDto> ordenTrabajo = ordenTrabajoRepository.findByPatenteVehiculo(patente);
+            return new ResponseEntity(ordenTrabajo, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity("Error Interno al buscar por patente", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/cliente/{rut}", produces = "application/json")
+    @CrossOrigin(origins = "*")
+    public @ResponseBody
+    ResponseEntity getOrdenTrabajoCliente(@PathVariable String rut) {
+        try {
+            List<OrdenTrabajoDto> ordenTrabajo = ordenTrabajoRepository.findByRutCliente(rut);
+            return new ResponseEntity(ordenTrabajo, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity("Error Interno al buscar por cliente", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/empresa/{idEmpresa}", produces = "application/json")
+    @CrossOrigin(origins = "*")
+    public @ResponseBody
+    ResponseEntity getOrdenTrabajoEmpresa(@PathVariable long idEmpresa) {
+        try {
+            List<OrdenTrabajoDto> ordenTrabajo = ordenTrabajoRepository.findByIdEmpresa(idEmpresa);
+            return new ResponseEntity(ordenTrabajo, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity("Error Interno al buscar por empresa", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping(path = "/insert",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -182,20 +218,111 @@ public class OrdenTrabajoController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
-    public ResponseEntity<OrdenTrabajoDto> update(@RequestBody OrdenTrabajoDto newOrdenTrabajo) {
-        /*OrdenTrabajoDto ordenTrabajo = ordenTrabajoRepository.save(newOrdenTrabajo);
-        if (ordenTrabajo == null) {
-            throw new RuntimeException();
-        } else {
-            return new ResponseEntity<>(ordenTrabajo, HttpStatus.CREATED);
-        }*/
-        OrdenTrabajoDto otResponse;
+    public ResponseEntity<OrdenTrabajoDto> update(@RequestBody OrdenTrabajoRequest newOrdenTrabajo) {
+        OrdenTrabajoDto otResponse = new OrdenTrabajoDto();
         try {
-            otResponse = ordenTrabajoRepository.save(newOrdenTrabajo);
+            EmpresaDto empresaDto = empresaRepository.getById(newOrdenTrabajo.getIdEmpresa());
+            VehiculoDto vehiculoDto = vehiculoRepository.findByPatenteAndEmpresa(newOrdenTrabajo.getPatenteVehiculo(), newOrdenTrabajo.getIdEmpresa());
+            Optional<ClienteDto> clienteDto = clienteRepository.findByRutAndHabilitadoAndEmpresa(newOrdenTrabajo.getRutCliente(), newOrdenTrabajo.getIdEmpresa());
+
+            EmpresaDto empresa = new EmpresaDto();
+            empresa.setNombre(empresaDto.getNombre());
+            empresa.setDireccion(empresaDto.getDireccion());
+            empresa.setRut(empresaDto.getRut());
+            empresa.setId(empresaDto.getId());
+
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            String fechaActual = dtf.format(LocalDateTime.now());
+
+            otResponse.setId(newOrdenTrabajo.getId());
+            otResponse.setHabilitado(1);
+            otResponse.setFechaIngreso(fechaActual);
+            otResponse.setRutCliente(newOrdenTrabajo.getRutCliente());
+            ClienteDto cl = new ClienteDto();
+            if(clienteDto.isPresent()){
+                cl.setId(clienteDto.get().getId());
+                cl.setHabilitado(clienteDto.get().getHabilitado());
+                cl.setNombre(clienteDto.get().getNombre());
+                cl.setApellido(clienteDto.get().getApellido());
+                cl.setRut(clienteDto.get().getRut());
+                cl.setDireccion(clienteDto.get().getDireccion());
+                cl.setComuna(clienteDto.get().getComuna());
+                cl.setCiudad(clienteDto.get().getCiudad());
+                cl.setTelefono(clienteDto.get().getTelefono());
+                cl.setEmail(clienteDto.get().getEmail());
+                cl.setEmpresa(empresa);
+                otResponse.setCliente(clienteDto.get());
+            }else{
+                return new ResponseEntity("Cliente no existe", HttpStatus.BAD_REQUEST);
+            }
+
+            otResponse.setPatenteVehiculo(newOrdenTrabajo.getPatenteVehiculo());
+            otResponse.setCodigo(newOrdenTrabajo.getCodigo());
+            otResponse.setValorOt(newOrdenTrabajo.getValorOt());
+
+            otResponse.setNumeroOrden(newOrdenTrabajo.getNumeroOrden());
+
+            VehiculoDto vehiculo = new VehiculoDto();
+            vehiculo.setId(vehiculoDto.getId());
+            vehiculo.setPatente(vehiculoDto.getPatente());
+            vehiculo.setHabilitado(vehiculoDto.getHabilitado());
+            vehiculo.setMarca(vehiculoDto.getMarca());
+            vehiculo.setModelo(vehiculoDto.getModelo());
+            vehiculo.setAnio(vehiculoDto.getAnio());
+            vehiculo.setNumeroChasis(vehiculoDto.getNumeroChasis());
+            vehiculo.setNumeroMotor(vehiculoDto.getNumeroMotor());
+            vehiculo.setColor(vehiculoDto.getColor());
+            vehiculo.setKilometraje(vehiculoDto.getKilometraje());
+            vehiculo.setRutDueno(vehiculoDto.getRutDueno());
+
+            Set<ClienteDto> clientesSet = new HashSet<>();
+            clientesSet.add(cl);
+            vehiculo.setCliente(clientesSet);
+
+            otResponse.setVehiculo(vehiculo);
+            otResponse.setVehiculo(vehiculoDto);
+
+            otResponse.setEmpresa(empresa);
+
+            Set<DetalleDto> detalleSet = new HashSet();
+            newOrdenTrabajo.getDetalleDtoList().forEach(detalle -> {
+                DetalleDto detalleDto = new DetalleDto();
+                detalleDto.setDescripcion(detalle.getDescripcion());
+                detalleDto.setRecargo(detalle.getRecargo());
+
+                RepuestoDto repuestoDto = new RepuestoDto();
+                if (detalle.getRepuesto_id() != 0) {
+                    Optional<RepuestoDto> repuestoDtoOptional = repuestoRepository.findById(detalle.getRepuesto_id());
+                    if(repuestoDtoOptional.isPresent()){
+                        repuestoDto.setId(repuestoDtoOptional.get().getId());
+                        repuestoDto.setCodigo(repuestoDtoOptional.get().getCodigo());
+                        repuestoDto.setHabilitado(repuestoDtoOptional.get().getHabilitado());
+                        repuestoDto.setNombre(repuestoDtoOptional.get().getNombre());
+                        repuestoDto.setMarca(repuestoDtoOptional.get().getMarca());
+                        repuestoDto.setModelo(repuestoDtoOptional.get().getModelo());
+                        repuestoDto.setAnio(repuestoDtoOptional.get().getAnio());
+                        repuestoDto.setRutProveedor(repuestoDtoOptional.get().getRutProveedor());
+                        repuestoDto.setValor(repuestoDtoOptional.get().getValor());
+                        repuestoDto.setEmpresa(empresa);
+
+                        //Falta agregar proveedor a repuestoDto
+                    }
+                    detalleDto.setRepuesto(repuestoDto);
+
+                }
+
+                detalleRepository.save(detalleDto);
+                detalleSet.add(detalleDto);
+
+            });
+            otResponse.setDetalle(detalleSet);
+            ordenTrabajoRepository.save(otResponse);
+
         }catch (Exception e){
-            throw e;
+            e.printStackTrace();
+            new ResponseEntity("Error al actualizar orden de trabajo", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(otResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(otResponse, HttpStatus.OK);
 
     }
 
@@ -203,22 +330,18 @@ public class OrdenTrabajoController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
-    public ResponseEntity<OrdenTrabajoDto> delete(@RequestBody OrdenTrabajoDto newOrdenTrabajo) {
-        newOrdenTrabajo.setHabilitado(0);
-        /*OrdenTrabajoDto ordenTrabajo = ordenTrabajoRepository.save(newOrdenTrabajo);
-        if (ordenTrabajo == null) {
-            throw new RuntimeException();
-        } else {
-            return new ResponseEntity<>(ordenTrabajo, HttpStatus.CREATED);
-        }*/
-        OrdenTrabajoDto otResponse;
+    public ResponseEntity<OrdenTrabajoDto> delete(@RequestBody OrdenTrabajoRequest newOrdenTrabajo) {
+        OrdenTrabajoDto otResponse = new OrdenTrabajoDto();
         try {
-            otResponse = ordenTrabajoRepository.save(newOrdenTrabajo);
+            OrdenTrabajoDto ot = ordenTrabajoRepository.findById(newOrdenTrabajo.getId()).get();
+            ot.setHabilitado(0);
+            ordenTrabajoRepository.save(ot);
+            return new ResponseEntity<>(ot, HttpStatus.OK);
         }catch (Exception e){
-            throw e;
+            e.printStackTrace();
+            new ResponseEntity("Error al eliminar orden de trabajo", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(otResponse, HttpStatus.CREATED);
-
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
 }

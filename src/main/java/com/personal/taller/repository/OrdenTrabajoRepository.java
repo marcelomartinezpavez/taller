@@ -17,6 +17,13 @@ public interface OrdenTrabajoRepository extends JpaRepository<OrdenTrabajoDto, L
     //@Query("{numeroOrden:'?0'}")
     OrdenTrabajoDto findByNumeroOrden(String numeroOrden);
 
+    List<OrdenTrabajoDto> findByPatenteVehiculo(String patente);
+
+    List<OrdenTrabajoDto> findByRutCliente(String rutCliente);
+
+    @Query(value = "select * from ORDEN_TRABAJO c where c.empresa_id = :idEmpresa", nativeQuery = true)
+    List<OrdenTrabajoDto> findByIdEmpresa(long idEmpresa);
+
     //@Query("{id:'?0'}")
     //OrdenTrabajoDto findById(String id);
 
