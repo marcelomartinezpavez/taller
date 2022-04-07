@@ -1,7 +1,12 @@
 package com.personal.taller.controller;
 
+import com.personal.taller.dto.EmpresaDto;
+import com.personal.taller.dto.ProveedorDto;
 import com.personal.taller.dto.RepuestoDto;
+import com.personal.taller.repository.EmpresaRepository;
+import com.personal.taller.repository.ProveedorRepository;
 import com.personal.taller.repository.RepuestoRepository;
+import com.personal.taller.request.RepuestoRequest;
 import com.personal.taller.response.RepuestoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.util.*;
+
 @Controller
 @RequestMapping("repuesto")
 public class RepuestoController {
@@ -17,82 +28,291 @@ public class RepuestoController {
     @Autowired
     RepuestoRepository repuestoRepository;
 
+    @Autowired
+    EmpresaRepository empresaRepository;
+
+    @Autowired
+    ProveedorRepository proveedorRepository;
+
     @GetMapping(path = "/all", produces = "application/json")
     @CrossOrigin(origins = "*")
     public @ResponseBody
     ResponseEntity getAllRepuesto() {
         System.out.println("getAll Repuesto");
-        RepuestoResponse repuestoResponse = new RepuestoResponse();
-        repuestoResponse.setRepuestoDtoList(repuestoRepository.findAll());
-        return new ResponseEntity<>(repuestoResponse, HttpStatus.OK);
+
+        List<RepuestoDto> repuestoDtoList = repuestoRepository.findAllHabilitado();
+        List<RepuestoDto> repuestoDtoListResp = new ArrayList<>();
+        for(RepuestoDto rep : repuestoDtoList){
+            RepuestoDto repuesto = new RepuestoDto();
+
+            Optional<EmpresaDto> respEmpresa = empresaRepository.findById(rep.getEmpresa().getId());
+            Optional<ProveedorDto> respProveedor = proveedorRepository.findByRutAndHabilitadoAndIdEmpresa(rep.getRutProveedor(), rep.getEmpresa().getId());
+
+            if(!respProveedor.isPresent()){
+                return new ResponseEntity("Error Proveedor no existe",HttpStatus.BAD_REQUEST);
+            }
+
+            if(respEmpresa.isPresent()) {
+                repuesto.setHabilitado(rep.getHabilitado());
+                repuesto.setNombre(rep.getNombre());
+                repuesto.setCodigo(rep.getCodigo());
+                repuesto.setMarca(rep.getMarca());
+                repuesto.setModelo(rep.getModelo());
+                repuesto.setAnio(rep.getAnio());
+                repuesto.setValor(rep.getValor());
+
+                EmpresaDto empresa = new EmpresaDto();
+                empresa.setId(respEmpresa.get().getId());
+                empresa.setDireccion(respEmpresa.get().getDireccion());
+                empresa.setRut(respEmpresa.get().getRut());
+                empresa.setNombre(respEmpresa.get().getNombre());
+
+                repuesto.setEmpresa(empresa);
+
+                Set<ProveedorDto> proveedorDtoSet = new HashSet<>();
+                ProveedorDto proveedor = new ProveedorDto();
+                proveedor.setHabilitado(respProveedor.get().getHabilitado());
+                proveedor.setNombre(respProveedor.get().getNombre());
+                proveedor.setApellido(respProveedor.get().getApellido());
+                proveedor.setRut(respProveedor.get().getRut());
+                proveedor.setDireccion(respProveedor.get().getDireccion());
+                proveedor.setComuna(respProveedor.get().getComuna());
+                proveedor.setCiudad(respProveedor.get().getCiudad());
+                proveedor.setTelefono(respProveedor.get().getTelefono());
+                proveedor.setEmail(respProveedor.get().getEmail());
+                proveedor.setEmpresa(empresa);
+
+                proveedorDtoSet.add(proveedor);
+
+                repuesto.setProveedor(proveedorDtoSet);
+
+            }else{
+                return new ResponseEntity("Error Empresa no existe",HttpStatus.BAD_REQUEST);
+            }
+            repuestoDtoListResp.add(repuesto);
+        }
+
+        return new ResponseEntity<>(repuestoDtoListResp, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{codigo}", produces = "application/json")
+    @GetMapping(value = "/codigo/{codigo}", produces = "application/json")
     @CrossOrigin(origins = "*")
     public @ResponseBody
-    RepuestoDto getRepuesto(@PathVariable String codigo) {
-        return repuestoRepository.findByCodigo(codigo);
+    ResponseEntity getRepuesto(@PathVariable String codigo) {
+        RepuestoDto repuesto = repuestoRepository.findByCodigo(codigo);
+        RepuestoDto resp = new RepuestoDto();
+
+        Optional<EmpresaDto> respEmpresa = empresaRepository.findById(repuesto.getEmpresa().getId());
+        Optional<ProveedorDto> respProveedor = proveedorRepository.findByRutAndHabilitadoAndIdEmpresa(repuesto.getRutProveedor(), repuesto.getEmpresa().getId());
+
+        if(!respProveedor.isPresent()){
+            return new ResponseEntity("Error Proveedor no existe",HttpStatus.BAD_REQUEST);
+        }
+
+        if(respEmpresa.isPresent()) {
+            resp.setHabilitado(repuesto.getHabilitado());
+            resp.setNombre(repuesto.getNombre());
+            resp.setCodigo(repuesto.getCodigo());
+            resp.setMarca(repuesto.getMarca());
+            resp.setModelo(repuesto.getModelo());
+            resp.setAnio(repuesto.getAnio());
+            resp.setValor(repuesto.getValor());
+
+            EmpresaDto empresa = new EmpresaDto();
+            empresa.setId(respEmpresa.get().getId());
+            empresa.setDireccion(respEmpresa.get().getDireccion());
+            empresa.setRut(respEmpresa.get().getRut());
+            empresa.setNombre(respEmpresa.get().getNombre());
+
+            resp.setEmpresa(empresa);
+
+            Set<ProveedorDto> proveedorDtoSet = new HashSet<>();
+            ProveedorDto proveedor = new ProveedorDto();
+            proveedor.setHabilitado(respProveedor.get().getHabilitado());
+            proveedor.setNombre(respProveedor.get().getNombre());
+            proveedor.setApellido(respProveedor.get().getApellido());
+            proveedor.setRut(respProveedor.get().getRut());
+            proveedor.setDireccion(respProveedor.get().getDireccion());
+            proveedor.setComuna(respProveedor.get().getComuna());
+            proveedor.setCiudad(respProveedor.get().getCiudad());
+            proveedor.setTelefono(respProveedor.get().getTelefono());
+            proveedor.setEmail(respProveedor.get().getEmail());
+            proveedor.setEmpresa(empresa);
+
+            proveedorDtoSet.add(proveedor);
+
+            resp.setProveedor(proveedorDtoSet);
+
+        }else{
+            return new ResponseEntity("Error Empresa no existe",HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity(resp, HttpStatus.OK);
     }
 
     @PostMapping(path = "/insert",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
-    public ResponseEntity<RepuestoDto> create(@RequestBody RepuestoDto newRepuesto) {
-        RepuestoDto repuestoResponse;
-        try {
-            repuestoResponse = repuestoRepository.save(newRepuesto);
-        }catch (Exception e){
-            throw e;
+    public ResponseEntity<RepuestoDto> create(@RequestBody RepuestoRequest newRepuesto) {
+        RepuestoDto repuesto = new RepuestoDto();
+        Optional<EmpresaDto> respEmpresa = empresaRepository.findById(newRepuesto.getIdEmpresa());
+        Optional<ProveedorDto> respProveedor = proveedorRepository.findByRutAndHabilitadoAndIdEmpresa(newRepuesto.getRutProveedor(), newRepuesto.getIdEmpresa());
+
+        if(!respProveedor.isPresent()){
+            return new ResponseEntity("Error Proveedor no existe",HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(repuestoResponse, HttpStatus.CREATED);
-        /*RepuestoDto repuesto = repuestoRepository.save(newRepuesto);
-        if (repuesto == null) {
-            throw new RuntimeException();
-        } else {
-            return new ResponseEntity<>(repuesto, HttpStatus.CREATED);
-        }*/
+
+        if(respEmpresa.isPresent()) {
+            repuesto.setHabilitado(newRepuesto.getHabilitado());
+            repuesto.setNombre(newRepuesto.getNombre());
+            repuesto.setCodigo(newRepuesto.getCodigo());
+            repuesto.setMarca(newRepuesto.getMarca());
+            repuesto.setModelo(newRepuesto.getModelo());
+            repuesto.setAnio(newRepuesto.getAnio());
+            repuesto.setValor(newRepuesto.getValor());
+            repuesto.setRutProveedor(respProveedor.get().getRut());
+
+            repuesto.setEmpresa(respEmpresa.get());
+
+            Set<ProveedorDto> proveedorDtoSet = new HashSet<>();
+            ProveedorDto proveedor = new ProveedorDto();
+            proveedor.setHabilitado(respProveedor.get().getHabilitado());
+            proveedor.setNombre(respProveedor.get().getNombre());
+            proveedor.setApellido(respProveedor.get().getApellido());
+            proveedor.setRut(respProveedor.get().getRut());
+            proveedor.setDireccion(respProveedor.get().getDireccion());
+            proveedor.setComuna(respProveedor.get().getComuna());
+            proveedor.setCiudad(respProveedor.get().getCiudad());
+            proveedor.setTelefono(respProveedor.get().getTelefono());
+            proveedor.setEmail(respProveedor.get().getEmail());
+
+            proveedor.setEmpresa(respEmpresa.get());
+
+            proveedorDtoSet.add(respProveedor.get());
+
+            repuesto.setProveedor(proveedorDtoSet);
+        }else{
+            return new ResponseEntity("Error Empresa no existe",HttpStatus.BAD_REQUEST);
+        }
+        try {
+            repuestoRepository.save(repuesto);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity("Error interno al crear Repuesto", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity(repuesto, HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/update",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
-    public ResponseEntity<RepuestoDto> update(@RequestBody RepuestoDto newRepuesto) {
-        RepuestoDto repuestoResponse;
-        try {
-            repuestoResponse = repuestoRepository.save(newRepuesto);
-        }catch (Exception e){
-            throw e;
+    public ResponseEntity<RepuestoDto> update(@RequestBody RepuestoRequest newRepuesto) {
+        RepuestoDto repuesto = new RepuestoDto();
+        Optional<EmpresaDto> respEmpresa = empresaRepository.findById(newRepuesto.getIdEmpresa());
+        Optional<ProveedorDto> respProveedor = proveedorRepository.findByRutAndHabilitadoAndIdEmpresa(newRepuesto.getRutProveedor(), newRepuesto.getIdEmpresa());
+
+        if(!respProveedor.isPresent()){
+            return new ResponseEntity("Error Proveedor no existe",HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(repuestoResponse, HttpStatus.CREATED);
-        /*RepuestoDto repuesto = repuestoRepository.save(newRepuesto);
-        if (repuesto == null) {
-            throw new RuntimeException();
-        } else {
-            return new ResponseEntity<>(repuesto, HttpStatus.CREATED);
-        }*/
+
+        if(respEmpresa.isPresent()) {
+            repuesto.setId(newRepuesto.getId());
+            repuesto.setHabilitado(newRepuesto.getHabilitado());
+            repuesto.setNombre(newRepuesto.getNombre());
+            repuesto.setCodigo(newRepuesto.getCodigo());
+            repuesto.setMarca(newRepuesto.getMarca());
+            repuesto.setModelo(newRepuesto.getModelo());
+            repuesto.setAnio(newRepuesto.getAnio());
+            repuesto.setValor(newRepuesto.getValor());
+            repuesto.setRutProveedor(respProveedor.get().getRut());
+
+            repuesto.setEmpresa(respEmpresa.get());
+
+            Set<ProveedorDto> proveedorDtoSet = new HashSet<>();
+            ProveedorDto proveedor = new ProveedorDto();
+            proveedor.setHabilitado(respProveedor.get().getHabilitado());
+            proveedor.setNombre(respProveedor.get().getNombre());
+            proveedor.setApellido(respProveedor.get().getApellido());
+            proveedor.setRut(respProveedor.get().getRut());
+            proveedor.setDireccion(respProveedor.get().getDireccion());
+            proveedor.setComuna(respProveedor.get().getComuna());
+            proveedor.setCiudad(respProveedor.get().getCiudad());
+            proveedor.setTelefono(respProveedor.get().getTelefono());
+            proveedor.setEmail(respProveedor.get().getEmail());
+
+            proveedor.setEmpresa(respEmpresa.get());
+
+            proveedorDtoSet.add(respProveedor.get());
+
+            repuesto.setProveedor(proveedorDtoSet);
+        }else{
+            return new ResponseEntity("Error Empresa no existe",HttpStatus.BAD_REQUEST);
+        }
+        try {
+            repuestoRepository.save(repuesto);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity("Error interno al actualizar Repuesto", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity(repuesto, HttpStatus.OK);
+
     }
 
     @DeleteMapping(path = "/delete",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
-    public ResponseEntity<RepuestoDto> delete(@RequestBody RepuestoDto newRepuesto) {
-        newRepuesto.setHabilitado(0);
-        /*RepuestoDto repuesto = repuestoRepository.save(newRepuesto);
-        if (repuesto == null) {
-            throw new RuntimeException();
-        } else {
-            return new ResponseEntity<>(repuesto, HttpStatus.CREATED);
-        }*/
-        RepuestoDto repuestoResponse;
-        try {
-            repuestoResponse = repuestoRepository.save(newRepuesto);
-        }catch (Exception e){
-            throw e;
+    public ResponseEntity<RepuestoDto> delete(@RequestBody RepuestoRequest newRepuesto) {
+        RepuestoDto repuesto = new RepuestoDto();
+        Optional<EmpresaDto> respEmpresa = empresaRepository.findById(newRepuesto.getIdEmpresa());
+        Optional<ProveedorDto> respProveedor = proveedorRepository.findByRutAndHabilitadoAndIdEmpresa(newRepuesto.getRutProveedor(), newRepuesto.getIdEmpresa());
+
+        if(!respProveedor.isPresent()){
+            return new ResponseEntity("Error Proveedor no existe",HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(repuestoResponse, HttpStatus.CREATED);
+
+        if(respEmpresa.isPresent()) {
+            repuesto.setId(newRepuesto.getId());
+            repuesto.setHabilitado(0);
+            repuesto.setNombre(newRepuesto.getNombre());
+            repuesto.setCodigo(newRepuesto.getCodigo());
+            repuesto.setMarca(newRepuesto.getMarca());
+            repuesto.setModelo(newRepuesto.getModelo());
+            repuesto.setAnio(newRepuesto.getAnio());
+            repuesto.setValor(newRepuesto.getValor());
+            repuesto.setRutProveedor(respProveedor.get().getRut());
+
+            repuesto.setEmpresa(respEmpresa.get());
+
+            Set<ProveedorDto> proveedorDtoSet = new HashSet<>();
+            ProveedorDto proveedor = new ProveedorDto();
+            proveedor.setHabilitado(respProveedor.get().getHabilitado());
+            proveedor.setNombre(respProveedor.get().getNombre());
+            proveedor.setApellido(respProveedor.get().getApellido());
+            proveedor.setRut(respProveedor.get().getRut());
+            proveedor.setDireccion(respProveedor.get().getDireccion());
+            proveedor.setComuna(respProveedor.get().getComuna());
+            proveedor.setCiudad(respProveedor.get().getCiudad());
+            proveedor.setTelefono(respProveedor.get().getTelefono());
+            proveedor.setEmail(respProveedor.get().getEmail());
+
+            proveedor.setEmpresa(respEmpresa.get());
+
+            proveedorDtoSet.add(respProveedor.get());
+
+            repuesto.setProveedor(proveedorDtoSet);
+        }else{
+            return new ResponseEntity("Error Empresa no existe",HttpStatus.BAD_REQUEST);
+        }
+        try {
+            repuestoRepository.save(repuesto);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity("Error interno al eliminar Repuesto", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity(repuesto, HttpStatus.OK);
 
     }
 

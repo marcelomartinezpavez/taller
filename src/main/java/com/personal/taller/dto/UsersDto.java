@@ -1,10 +1,11 @@
 package com.personal.taller.dto;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "users")
-public class UsersDto {
+public class UsersDto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

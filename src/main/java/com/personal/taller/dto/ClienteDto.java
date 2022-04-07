@@ -3,15 +3,19 @@ package com.personal.taller.dto;
 //import org.springframework.data.annotation.Id;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
 //@Document("clientes")
 
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Table(name = "clientes")
-public class ClienteDto {
+public class ClienteDto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

@@ -4,12 +4,13 @@ package com.personal.taller.dto;
 //import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 //@Document("proveedores")
 @Entity
 @Table(name = "proveedores")
-public class ProveedorDto {
+public class ProveedorDto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

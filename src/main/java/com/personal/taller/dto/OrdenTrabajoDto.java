@@ -1,17 +1,15 @@
 package com.personal.taller.dto;
 
-//import org.springframework.data.annotation.Id;
-//import org.springframework.data.mongodb.core.mapping.Document;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
+import java.io.Serializable;
 import java.util.Set;
 
-//@Document("ordenTrabajo")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Table(name = "ordenTrabajo")
-public class OrdenTrabajoDto {
+public class OrdenTrabajoDto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -28,20 +26,23 @@ public class OrdenTrabajoDto {
     @Column(name = "codigo")
     private String codigo;
     @Column(name = "valorOt")
-    private String valorOt;
+    private long valorOt;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "vehiculo_id", referencedColumnName = "id")
+    private VehiculoDto vehiculo;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "detalle")
     private Set<DetalleDto> detalle;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vehiculo_id")
-    private VehiculoDto vehiculo;
-
     //@OneToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(foreignKey, name = "cliente_id" )
-    //private ClienteDto cliente;
+    //@JoinColumn(name = "vehiculo_id")
+    //private VehiculoDto vehiculo;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cliente_id", referencedColumnName = "id")
+    private ClienteDto cliente;
 
     //@OneToOne(fetch = FetchType.LAZY)
     //@JoinColumn(name = "rut_cliente")
@@ -129,11 +130,39 @@ public class OrdenTrabajoDto {
         this.codigo = codigoRepuestos;
     }
 
-    public String getValorOt() {
+    public long getValorOt() {
         return valorOt;
     }
 
-    public void setValorOt(String valorOt) {
+    public void setValorOt(long valorOt) {
         this.valorOt = valorOt;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public VehiculoDto getVehiculo() {
+        return vehiculo;
+    }
+
+    public void setVehiculo(VehiculoDto vehiculo) {
+        this.vehiculo = vehiculo;
+    }
+
+    public EmpresaDto getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(EmpresaDto empresa) {
+        this.empresa = empresa;
+    }
+
+    public ClienteDto getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(ClienteDto cliente) {
+        this.cliente = cliente;
     }
 }

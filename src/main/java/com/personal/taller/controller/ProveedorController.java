@@ -1,6 +1,5 @@
 package com.personal.taller.controller;
 
-import com.personal.taller.dto.ClienteDto;
 import com.personal.taller.dto.EmpresaDto;
 import com.personal.taller.dto.ProveedorDto;
 import com.personal.taller.repository.EmpresaRepository;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -146,8 +144,6 @@ public class ProveedorController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
     public ResponseEntity create(@RequestBody ProveedorRequest newProveedor) {
-
-        //ProveedorDto proveedor = proveedorRepository.save(newProveedor);
 
         ProveedorDto proveedor = new ProveedorDto();
         Optional<EmpresaDto> respEmpresa = empresaRepository.findById(newProveedor.getIdEmpresa());

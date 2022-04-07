@@ -3,14 +3,18 @@ package com.personal.taller.dto;
 //import org.springframework.data.annotation.Id;
 //import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
 //@Document("repuesto")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Table(name = "repuesto")
-public class RepuestoDto {
+public class RepuestoDto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -132,5 +136,27 @@ public class RepuestoDto {
         this.valor = valor;
     }
 
+    public DetalleDto getDetalle() {
+        return detalle;
+    }
 
+    public void setDetalle(DetalleDto detalle) {
+        this.detalle = detalle;
+    }
+
+    public EmpresaDto getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(EmpresaDto empresa) {
+        this.empresa = empresa;
+    }
+
+    public Set<ProveedorDto> getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(Set<ProveedorDto> proveedor) {
+        this.proveedor = proveedor;
+    }
 }
