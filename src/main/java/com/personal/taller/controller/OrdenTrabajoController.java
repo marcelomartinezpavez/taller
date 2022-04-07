@@ -54,12 +54,24 @@ public class OrdenTrabajoController {
         }
     }
 
-    @GetMapping(value = "/{numeroOrden}", produces = "application/json")
+    @GetMapping(value = "/orden/{numeroOrden}", produces = "application/json")
     @CrossOrigin(origins = "*")
     public @ResponseBody
     ResponseEntity getOrdenTrabajo(@PathVariable String numeroOrden) {
         try {
             OrdenTrabajoDto ordenTrabajo = ordenTrabajoRepository.findByNumeroOrden(numeroOrden);
+            return new ResponseEntity(ordenTrabajo, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity("Error Interno al buscar por numero de orden", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/orden/{numeroOrden}/empresa/{idEmpresa}", produces = "application/json")
+    @CrossOrigin(origins = "*")
+    public @ResponseBody
+    ResponseEntity getOrdenTrabajoByNumAndEmp(@PathVariable String numeroOrden, @PathVariable long idEmpresa) {
+        try {
+            OrdenTrabajoDto ordenTrabajo = ordenTrabajoRepository.findByNumeroOrdenAndEmpresa(numeroOrden, idEmpresa);
             return new ResponseEntity(ordenTrabajo, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity("Error Interno al buscar por numero de orden", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -78,12 +90,36 @@ public class OrdenTrabajoController {
         }
     }
 
+    @GetMapping(value = "/patente/{patente}/empresa/{idEmpresa}", produces = "application/json")
+    @CrossOrigin(origins = "*")
+    public @ResponseBody
+    ResponseEntity getOrdenTrabajoPatenteAndEmpresa(@PathVariable String patente,@PathVariable long idEmpresa) {
+        try {
+            List<OrdenTrabajoDto> ordenTrabajo = ordenTrabajoRepository.findByPatenteVehiculoAndEmpresa(patente, idEmpresa);
+            return new ResponseEntity(ordenTrabajo, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity("Error Interno al buscar por patente", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping(value = "/cliente/{rut}", produces = "application/json")
     @CrossOrigin(origins = "*")
     public @ResponseBody
     ResponseEntity getOrdenTrabajoCliente(@PathVariable String rut) {
         try {
             List<OrdenTrabajoDto> ordenTrabajo = ordenTrabajoRepository.findByRutCliente(rut);
+            return new ResponseEntity(ordenTrabajo, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity("Error Interno al buscar por cliente", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/cliente/{rut}/empresa/{idEmpresa}", produces = "application/json")
+    @CrossOrigin(origins = "*")
+    public @ResponseBody
+    ResponseEntity getOrdenTrabajoCliente(@PathVariable String rut, @PathVariable long idEmpresa) {
+        try {
+            List<OrdenTrabajoDto> ordenTrabajo = ordenTrabajoRepository.findByRutClienteAndEmpresa(rut, idEmpresa);
             return new ResponseEntity(ordenTrabajo, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity("Error Interno al buscar por cliente", HttpStatus.INTERNAL_SERVER_ERROR);

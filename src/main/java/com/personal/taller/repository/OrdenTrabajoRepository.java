@@ -15,13 +15,26 @@ public interface OrdenTrabajoRepository extends JpaRepository<OrdenTrabajoDto, L
     //List<OrdenTrabajoDto> findAll();
 
     //@Query("{numeroOrden:'?0'}")
+    @Query(value = "select * from ORDEN_TRABAJO ot where ot.numero_orden = :numeroOrden and ot.habilitado = 1", nativeQuery = true)
     OrdenTrabajoDto findByNumeroOrden(String numeroOrden);
 
+    @Query(value = "select * from ORDEN_TRABAJO ot where ot.numero_orden = :numeroOrden and empresa_id = :idEmpresa and ot.habilitado = 1", nativeQuery = true)
+    OrdenTrabajoDto findByNumeroOrdenAndEmpresa(String numeroOrden, long idEmpresa);
+
+    @Query(value = "select * from ORDEN_TRABAJO ot where ot.patente_vehiculo = :patente and ot.habilitado = 1", nativeQuery = true)
     List<OrdenTrabajoDto> findByPatenteVehiculo(String patente);
 
+    @Query(value = "select * from ORDEN_TRABAJO ot where ot.patente_vehiculo = :patente and empresa_id = :idEmpresa and ot.habilitado = 1", nativeQuery = true)
+    List<OrdenTrabajoDto> findByPatenteVehiculoAndEmpresa(String patente, long idEmpresa);
+
+    @Query(value = "select * from ORDEN_TRABAJO ot where ot.rut_cliente = :rutCliente and ot.habilitado = 1", nativeQuery = true)
     List<OrdenTrabajoDto> findByRutCliente(String rutCliente);
 
-    @Query(value = "select * from ORDEN_TRABAJO c where c.empresa_id = :idEmpresa", nativeQuery = true)
+
+    @Query(value = "select * from ORDEN_TRABAJO ot where ot.rut_cliente = :rutCliente and empresa_id = :idEmpresa and ot.habilitado = 1", nativeQuery = true)
+    List<OrdenTrabajoDto> findByRutClienteAndEmpresa(String rutCliente, long idEmpresa);
+
+    @Query(value = "select * from ORDEN_TRABAJO ot where ot.empresa_id = :idEmpresa", nativeQuery = true)
     List<OrdenTrabajoDto> findByIdEmpresa(long idEmpresa);
 
     //@Query("{id:'?0'}")
