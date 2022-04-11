@@ -173,8 +173,13 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     public ResponseEntity deleteClient(ClienteRequest newCliente){
-        ClienteDto cliente = new ClienteDto();
-        Optional<EmpresaDto> respEmpresa = empresaRepository.findById(newCliente.getIdEmpresa());
+        ClienteDto cliente = clienteRepository.getById(newCliente.getId());
+        if(cliente != null){
+            cliente.setHabilitado(0);
+            clienteRepository.save(cliente);
+            return new ResponseEntity(cliente,HttpStatus.OK);
+        }
+        /*Optional<EmpresaDto> respEmpresa = empresaRepository.findById(newCliente.getIdEmpresa());
 
         if(respEmpresa.isPresent()) {
             cliente.setId(newCliente.getId());
@@ -196,8 +201,8 @@ public class ClienteServiceImpl implements ClienteService {
             clienteRepository.save(cliente);
         }catch (Exception e){
             return new ResponseEntity("Error interno al eliminar cliente",HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity(cliente, HttpStatus.OK);
+        }*/
+        return new ResponseEntity("Cliente no encontrado", HttpStatus.BAD_REQUEST);
     }
 
 }

@@ -265,7 +265,14 @@ public class RepuestoController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
     public ResponseEntity<RepuestoDto> delete(@RequestBody RepuestoRequest newRepuesto) {
-        RepuestoDto repuesto = new RepuestoDto();
+        RepuestoDto repuesto = repuestoRepository.findById(newRepuesto.getId()).get();
+
+        if (repuesto != null) {
+            repuesto.setHabilitado(0);
+            repuestoRepository.save(repuesto);
+            return new ResponseEntity(repuesto, HttpStatus.OK);
+        }
+         /*       new RepuestoDto();
         Optional<EmpresaDto> respEmpresa = empresaRepository.findById(newRepuesto.getIdEmpresa());
         Optional<ProveedorDto> respProveedor = proveedorRepository.findByRutAndHabilitadoAndIdEmpresa(newRepuesto.getRutProveedor(), newRepuesto.getIdEmpresa());
 
@@ -311,8 +318,8 @@ public class RepuestoController {
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity("Error interno al eliminar Repuesto", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity(repuesto, HttpStatus.OK);
+        }*/
+        return new ResponseEntity("Repuesto no encontrado", HttpStatus.BAD_REQUEST);
 
     }
 

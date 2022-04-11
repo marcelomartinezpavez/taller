@@ -144,6 +144,11 @@ public class OrdenTrabajoController {
     @CrossOrigin(origins = "*")
     public ResponseEntity<OrdenTrabajoDto> create(@RequestBody OrdenTrabajoRequest newOrdenTrabajo) {
         System.out.println("INSERT OT");
+
+        //TODO confirmar que al asociar vehiculo con ot y clientes que siempre todos correspondan a la misma empresa.
+
+        //FIXME ESTADOS Tipos de ot abirtas finalizadas en proceso
+
         OrdenTrabajoDto otResponse = new OrdenTrabajoDto();
         try {
             EmpresaDto empresaDto = empresaRepository.getById(newOrdenTrabajo.getIdEmpresa());

@@ -168,8 +168,6 @@ public class ProveedorController {
             return new ResponseEntity("Error interno al crear Proveedor", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity(proveedor, HttpStatus.CREATED);
-
-
     }
 
     @PutMapping(path = "/update",
@@ -207,30 +205,16 @@ public class ProveedorController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
     public ResponseEntity<ProveedorDto> delete(@RequestBody ProveedorRequest newProveedor) {
-        ProveedorDto proveedor = new ProveedorDto();
-        Optional<EmpresaDto> respEmpresa = empresaRepository.findById(newProveedor.getIdEmpresa());
-
-        if(respEmpresa.isPresent()) {
-            proveedor.setId(newProveedor.getId());
-            proveedor.setHabilitado(0);
-            proveedor.setApellido(newProveedor.getApellido());
-            proveedor.setCiudad(newProveedor.getCiudad());
-            proveedor.setComuna(newProveedor.getComuna());
-            proveedor.setDireccion(newProveedor.getDireccion());
-            proveedor.setEmail(newProveedor.getEmail());
-            proveedor.setNombre(newProveedor.getNombre());
-            proveedor.setRut(newProveedor.getRut());
-            proveedor.setTelefono(newProveedor.getTelefono());
-            proveedor.setEmpresa(respEmpresa.get());
-        }else{
-            return new ResponseEntity("Error Empresa no existe",HttpStatus.BAD_REQUEST);
+        Optional<ProveedorDto> proveedor = proveedorRepository.findById(newProveedor.getId());
+        if(proveedor.isPresent()){
+            if(newProveedor.getIdEmpresa() == proveedor.get().getEmpresa().getId()){
+                proveedor.get().setHabilitado(0);
+                proveedorRepository.save(proveedor.get());
+            }else{
+                return new ResponseEntity("Error Empresa no corresponde al proveedor.",HttpStatus.BAD_REQUEST);
+            }
         }
 
-        try {
-            proveedorRepository.save(proveedor);
-        }catch (Exception e){
-            return new ResponseEntity("Error interno al eliminar proveedor",HttpStatus.INTERNAL_SERVER_ERROR);
-        }
         return new ResponseEntity(proveedor, HttpStatus.OK);
 
     }

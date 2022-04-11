@@ -303,6 +303,14 @@ public class VehiculoController {
 
         try {
 
+            Optional<VehiculoDto> vehiculoDtoOptional = vehiculoRepository.findById(newVehiculo.getId());
+            if(vehiculoDtoOptional.isPresent()){
+                VehiculoDto vehiculoDto = vehiculoDtoOptional.get();
+                vehiculoDto.setHabilitado(0);
+                vehiculoRepository.save(vehiculoDto);
+                return new ResponseEntity(vehiculoDto, HttpStatus.OK);
+            }
+            /*
             VehiculoDto vehiculoDto = new VehiculoDto();
             vehiculoDto.setId(newVehiculo.getId());
             vehiculoDto.setHabilitado(0);
@@ -358,10 +366,12 @@ public class VehiculoController {
             }
 
             return new ResponseEntity(vehiculoDto, HttpStatus.OK);
+            */
             //vehiculoRepository.save(newVehiculo);
         }catch (Exception e){
-            return new ResponseEntity("Ocurrio un error interno",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity("Ocurrio un error interno", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return new ResponseEntity("Vehiculo no encontrado", HttpStatus.NOT_FOUND);
     }
 
 }
