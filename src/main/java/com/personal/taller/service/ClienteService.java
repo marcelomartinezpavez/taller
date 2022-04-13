@@ -2,7 +2,6 @@ package com.personal.taller.service;
 
 import com.personal.taller.request.ClienteRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 public interface ClienteService {
 

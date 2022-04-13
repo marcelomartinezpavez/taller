@@ -20,10 +20,6 @@ public class ClienteController {
     @CrossOrigin(origins = "*")
     public @ResponseBody
     ResponseEntity getAllCliente() {
-        /*****
-         * OBTIENE TODOS LOS CLIENTES, SIN FILTRAR POR EMPRESA
-         *
-         * *****/
         return clienteService.getAll();
     }
 
@@ -31,14 +27,7 @@ public class ClienteController {
     @CrossOrigin(origins = "*")
     public @ResponseBody
     ResponseEntity getAllClientePorEmpresa(@PathVariable long idempresa) {
-
-        /*****
-         * OBTIENE TODOS LOS CLIENTES, FILTRADO POR EMPRESA
-         *
-         * *****/
-
         return clienteService.getClientByCompany(idempresa);
-
     }
 
     @GetMapping(value = "/{rut}", produces = "application/json")
