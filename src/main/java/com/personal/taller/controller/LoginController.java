@@ -72,7 +72,7 @@ public class LoginController {
 
             users.setUsers(empresaAndUser.getUsers());
             users.setPass(empresaAndUser.getPass());
-            users.setHabilitado(1);
+            users.setHabilitado(true);
             users.setRol(empresaAndUser.getRol());
 
             if(empresa.isPresent()) {
@@ -115,7 +115,7 @@ public class LoginController {
 
             users.setUsers(empresaAndUser.getUsers());
             users.setPass(empresaAndUser.getPass());
-            users.setHabilitado(1);
+            users.setHabilitado(true);
             users.setRol(empresaAndUser.getRol());
 
             if(empresa.isPresent()) {

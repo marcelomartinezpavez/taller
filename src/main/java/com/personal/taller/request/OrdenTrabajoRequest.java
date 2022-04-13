@@ -8,7 +8,7 @@ public class OrdenTrabajoRequest {
 
     private long id;
     private String numeroOrden;
-    private int habilitado;
+    private boolean habilitado;
     private String fechaIngreso;
     private String rutCliente;
     private String patenteVehiculo;
@@ -34,11 +34,11 @@ public class OrdenTrabajoRequest {
         this.numeroOrden = numeroOrden;
     }
 
-    public int getHabilitado() {
+    public boolean getHabilitado() {
         return habilitado;
     }
 
-    public void setHabilitado(int habilitado) {
+    public void setHabilitado(boolean habilitado) {
         this.habilitado = habilitado;
     }
 

@@ -268,7 +268,7 @@ public class RepuestoController {
         RepuestoDto repuesto = repuestoRepository.findById(newRepuesto.getId()).get();
 
         if (repuesto != null) {
-            repuesto.setHabilitado(0);
+            repuesto.setHabilitado(false);
             repuestoRepository.save(repuesto);
             return new ResponseEntity(repuesto, HttpStatus.OK);
         }

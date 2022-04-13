@@ -2,7 +2,7 @@ package com.personal.taller.request;
 
 public class ProveedorRequest {
     private long id;
-    private int habilitado;
+    private boolean habilitado;
     private String nombre;
     private String apellido;
     private String rut;
@@ -22,11 +22,11 @@ public class ProveedorRequest {
         this.id = id;
     }
 
-    public int getHabilitado() {
+    public boolean getHabilitado() {
         return habilitado;
     }
 
-    public void setHabilitado(int habilitado) {
+    public void setHabilitado(boolean habilitado) {
         this.habilitado = habilitado;
     }
 

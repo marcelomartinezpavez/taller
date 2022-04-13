@@ -164,7 +164,7 @@ public class OrdenTrabajoController {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
             String fechaActual = dtf.format(LocalDateTime.now());
 
-            otResponse.setHabilitado(1);
+            otResponse.setHabilitado(true);
             otResponse.setFechaIngreso(fechaActual);
             otResponse.setRutCliente(newOrdenTrabajo.getRutCliente());
             ClienteDto cl = new ClienteDto();
@@ -276,7 +276,7 @@ public class OrdenTrabajoController {
             String fechaActual = dtf.format(LocalDateTime.now());
 
             otResponse.setId(newOrdenTrabajo.getId());
-            otResponse.setHabilitado(1);
+            otResponse.setHabilitado(newOrdenTrabajo.getHabilitado());
             otResponse.setFechaIngreso(fechaActual);
             otResponse.setRutCliente(newOrdenTrabajo.getRutCliente());
             ClienteDto cl = new ClienteDto();
@@ -375,7 +375,7 @@ public class OrdenTrabajoController {
         OrdenTrabajoDto otResponse = new OrdenTrabajoDto();
         try {
             OrdenTrabajoDto ot = ordenTrabajoRepository.findById(newOrdenTrabajo.getId()).get();
-            ot.setHabilitado(0);
+            ot.setHabilitado(false);
             ordenTrabajoRepository.save(ot);
             return new ResponseEntity<>(ot, HttpStatus.OK);
         }catch (Exception e){

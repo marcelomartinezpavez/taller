@@ -175,7 +175,7 @@ public class ClienteServiceImpl implements ClienteService {
     public ResponseEntity deleteClient(ClienteRequest newCliente){
         ClienteDto cliente = clienteRepository.getById(newCliente.getId());
         if(cliente != null){
-            cliente.setHabilitado(0);
+            cliente.setHabilitado(false);
             clienteRepository.save(cliente);
             return new ResponseEntity(cliente,HttpStatus.OK);
         }

@@ -3,7 +3,7 @@ package com.personal.taller.request;
 public class RepuestoRequest {
 
     private long id;
-    private int habilitado;
+    private boolean habilitado;
     private String nombre;
     private String codigo;
     private String marca;
@@ -21,11 +21,11 @@ public class RepuestoRequest {
         this.id = id;
     }
 
-    public int getHabilitado() {
+    public boolean getHabilitado() {
         return habilitado;
     }
 
-    public void setHabilitado(int habilitado) {
+    public void setHabilitado(boolean habilitado) {
         this.habilitado = habilitado;
     }
 

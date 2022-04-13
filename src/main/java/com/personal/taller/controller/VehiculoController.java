@@ -306,7 +306,7 @@ public class VehiculoController {
             Optional<VehiculoDto> vehiculoDtoOptional = vehiculoRepository.findById(newVehiculo.getId());
             if(vehiculoDtoOptional.isPresent()){
                 VehiculoDto vehiculoDto = vehiculoDtoOptional.get();
-                vehiculoDto.setHabilitado(0);
+                vehiculoDto.setHabilitado(false);
                 vehiculoRepository.save(vehiculoDto);
                 return new ResponseEntity(vehiculoDto, HttpStatus.OK);
             }

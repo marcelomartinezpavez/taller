@@ -19,7 +19,7 @@ public class VehiculoDto implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column(name = "habilitado")
-    private int habilitado;
+    private boolean habilitado;
     @Column(name = "marca")
     private String marca;
     @Column(name = "modelo")
@@ -50,7 +50,7 @@ public class VehiculoDto implements Serializable {
 
     public VehiculoDto(){}
 
-    public VehiculoDto(long id, int habilitado, String marca, String modelo, String patente, String anio,
+    public VehiculoDto(long id, boolean habilitado, String marca, String modelo, String patente, String anio,
                         String numeroMotor, String numeroChasis, String rutDueno, String color, String kilometraje) {
         super();
         this.id = id;
@@ -74,11 +74,11 @@ public class VehiculoDto implements Serializable {
         this.id = id;
     }
 
-    public int getHabilitado() {
+    public boolean getHabilitado() {
         return habilitado;
     }
 
-    public void setHabilitado(int habilitado) {
+    public void setHabilitado(boolean habilitado) {
         this.habilitado = habilitado;
     }
 

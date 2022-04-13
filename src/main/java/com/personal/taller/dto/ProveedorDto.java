@@ -15,7 +15,7 @@ public class ProveedorDto implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column(name = "habilitado")
-    private int habilitado;
+    private boolean habilitado;
     @Column(name = "nombre")
     private String nombre;
     @Column(name = "apellido")
@@ -44,7 +44,7 @@ public class ProveedorDto implements Serializable {
 
     public ProveedorDto(){}
 
-    public ProveedorDto(long id, int habilitado, String nombre, String apellido, String direccion, String comuna,
+    public ProveedorDto(long id, boolean habilitado, String nombre, String apellido, String direccion, String comuna,
                       String ciudad, String telefono, String email) {
         super();
         this.id = id;
@@ -66,11 +66,11 @@ public class ProveedorDto implements Serializable {
         this.id = id;
     }
 
-    public int getHabilitado() {
+    public boolean getHabilitado() {
         return habilitado;
     }
 
-    public void setHabilitado(int habilitado) {
+    public void setHabilitado(boolean habilitado) {
         this.habilitado = habilitado;
     }
 

@@ -16,10 +16,10 @@ public interface RepuestoRepository extends JpaRepository<RepuestoDto, Long> {
     //Hacer metodo que busque todos los repuestos
 
 
-    @Query(value = "select * from repuesto r where r.habilitado = 1", nativeQuery = true)
+    @Query(value = "select * from repuesto r", nativeQuery = true)
     List<RepuestoDto> findAllHabilitado();
 
-    @Query(value = "select * from repuesto r where r.habilitado = 1 and r.codigo = :codigo", nativeQuery = true)
+    @Query(value = "select * from repuesto r where r.codigo = :codigo", nativeQuery = true)
     RepuestoDto findByCodigo(String codigo);
 
     //@Query(value="{category:'?0'}", fields="{'name' : 1, 'quantity' : 1}")

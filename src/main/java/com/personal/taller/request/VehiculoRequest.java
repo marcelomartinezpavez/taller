@@ -8,7 +8,7 @@ import java.util.Set;
 public class VehiculoRequest {
 
     private long id;
-    private int habilitado;
+    private boolean habilitado;
     private String marca;
     private String modelo;
     private String patente;
@@ -33,11 +33,11 @@ public class VehiculoRequest {
         this.id = id;
     }
 
-    public int getHabilitado() {
+    public boolean getHabilitado() {
         return habilitado;
     }
 
-    public void setHabilitado(int habilitado) {
+    public void setHabilitado(boolean habilitado) {
         this.habilitado = habilitado;
     }
 

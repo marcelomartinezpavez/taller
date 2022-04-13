@@ -16,7 +16,7 @@ public class OrdenTrabajoDto implements Serializable {
     @Column(name = "numeroOrden")
     private String numeroOrden;
     @Column(name = "habilitado")
-    private int habilitado;
+    private boolean habilitado;
     @Column(name = "fechaIngreso")
     private String fechaIngreso;
     @Column(name = "rutCliente")
@@ -54,7 +54,7 @@ public class OrdenTrabajoDto implements Serializable {
 
     public OrdenTrabajoDto(){}
 
-    public OrdenTrabajoDto(long id, int habilitado, String numeroOrden, String fechaIngreso, String rutCliente, String patenteVehiculo, Set<DetalleDto> detalle, String codigoRepuestos){
+    public OrdenTrabajoDto(long id, boolean habilitado, String numeroOrden, String fechaIngreso, String rutCliente, String patenteVehiculo, Set<DetalleDto> detalle, String codigoRepuestos){
         super();
         this.id= id;
         this.numeroOrden = numeroOrden;
@@ -82,11 +82,11 @@ public class OrdenTrabajoDto implements Serializable {
         this.numeroOrden = numeroOrden;
     }
 
-    public int getHabilitado() {
+    public boolean getHabilitado() {
         return habilitado;
     }
 
-    public void setHabilitado(int habilitado) {
+    public void setHabilitado(boolean habilitado) {
         this.habilitado = habilitado;
     }
 

@@ -21,6 +21,8 @@ import java.util.Optional;
 @RequestMapping("proveedor")
 public class ProveedorController {
 
+    //Cambiar habilitado a boolean
+
     @Autowired
     ProveedorRepository proveedorRepository;
 
@@ -204,16 +206,16 @@ public class ProveedorController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
-    public ResponseEntity<ProveedorDto> delete(@RequestBody ProveedorRequest newProveedor) {
+    public ResponseEntity<ProveedorDto> delete(@RequestBody ProveedorDto newProveedor) {
         Optional<ProveedorDto> proveedor = proveedorRepository.findById(newProveedor.getId());
         if(proveedor.isPresent()){
-            if(newProveedor.getIdEmpresa() == proveedor.get().getEmpresa().getId()){
-                proveedor.get().setHabilitado(0);
+            //if(newProveedor.getEmpresa().getId() == proveedor.get().getEmpresa().getId()){
+                proveedor.get().setHabilitado(false);
                 proveedorRepository.save(proveedor.get());
-            }else{
-                return new ResponseEntity("Error Empresa no corresponde al proveedor.",HttpStatus.BAD_REQUEST);
-            }
+        }else{
+                return new ResponseEntity("Error proveedor no existe.",HttpStatus.BAD_REQUEST);
         }
+        //}
 
         return new ResponseEntity(proveedor, HttpStatus.OK);
 

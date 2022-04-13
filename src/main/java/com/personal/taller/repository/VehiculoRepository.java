@@ -15,23 +15,21 @@ public interface VehiculoRepository extends JpaRepository<VehiculoDto, Long> {
     //@Query("select * from vehiculo")
     //List<VehiculoDto> findAll();
 
-    @Query(value = "select * from vehiculo v where v.habilitado = 1", nativeQuery = true)
+    @Query(value = "select * from vehiculo v ", nativeQuery = true)
     List<VehiculoDto> findAllHabilitado();
 
 
     //@Query("{patente:'?0'}")
-    @Query(value = "select * from vehiculo v where v.patente = :patente and v.habilitado = 1", nativeQuery = true)
+    @Query(value = "select * from vehiculo v where v.patente = :patente ", nativeQuery = true)
     VehiculoDto findByPatente(String patente);
 
     @Query(value = "select * from vehiculo as v FULL JOIN clientes as c on v.rut_dueno = c.rut " +
             "where v.patente = :patente " +
-            "and c.empresa_id = :idEmpresa "+
-            "and v.habilitado = 1 "+
-            "and c.habilitado = 1", nativeQuery = true)
+            "and c.empresa_id = :idEmpresa ", nativeQuery = true)
     VehiculoDto findByPatenteAndEmpresa(String patente, long idEmpresa);
 
     //@Query("{rutDueno:'?0'}")
-    @Query(value = "select * from vehiculo v where v.rut_dueno = :rutCliente and v.habilitado = 1", nativeQuery = true)
+    @Query(value = "select * from vehiculo v where v.rut_dueno = :rutCliente", nativeQuery = true)
     List<VehiculoDto> findByRutDueno(String rutCliente);
     //@Query(value="{category:'?0'}", fields="{'name' : 1, 'quantity' : 1}")
     //List<ClienteDto> findAll(String category);

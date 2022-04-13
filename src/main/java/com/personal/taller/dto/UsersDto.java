@@ -24,7 +24,7 @@ public class UsersDto implements Serializable {
     private String rol;
 
     @Column(name = "habilitado")
-    private int habilitado;
+    private boolean habilitado;
 
     public UsersDto(){}
 
@@ -68,11 +68,11 @@ public class UsersDto implements Serializable {
         this.rol = rol;
     }
 
-    public int getHabilitado() {
+    public boolean getHabilitado() {
         return habilitado;
     }
 
-    public void setHabilitado(int habilitado) {
+    public void setHabilitado(boolean habilitado) {
         this.habilitado = habilitado;
     }
 }

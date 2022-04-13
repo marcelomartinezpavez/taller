@@ -5,7 +5,7 @@ import javax.persistence.Column;
 public class ClienteRequest {
 
     private long id;
-    private int habilitado;
+    private boolean habilitado;
     private String nombre;
     private String apellido;
     private String rut;
@@ -24,11 +24,11 @@ public class ClienteRequest {
         this.id = id;
     }
 
-    public int getHabilitado() {
+    public boolean getHabilitado() {
         return habilitado;
     }
 
-    public void setHabilitado(int habilitado) {
+    public void setHabilitado(boolean habilitado) {
         this.habilitado = habilitado;
     }
 
