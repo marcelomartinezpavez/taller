@@ -150,6 +150,63 @@ public class RepuestoController {
         return new ResponseEntity(resp, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/proveedor/{rut}", produces = "application/json")
+    @CrossOrigin(origins = "*")
+    public @ResponseBody
+    ResponseEntity getRepuestoProveedor(@PathVariable String rut) {
+        RepuestoDto repuesto = repuestoRepository.findByProveedor(rut);
+
+        RepuestoDto resp = new RepuestoDto();
+
+        Optional<EmpresaDto> respEmpresa = empresaRepository.findById(repuesto.getEmpresa().getId());
+        Optional<ProveedorDto> respProveedor = proveedorRepository.findByRutAndHabilitadoAndIdEmpresa(repuesto.getRutProveedor(), repuesto.getEmpresa().getId());
+
+        if(!respProveedor.isPresent()){
+            return new ResponseEntity("Error Proveedor no existe",HttpStatus.BAD_REQUEST);
+        }
+
+        if(respEmpresa.isPresent()) {
+            resp.setHabilitado(repuesto.getHabilitado());
+            resp.setNombre(repuesto.getNombre());
+            resp.setCodigo(repuesto.getCodigo());
+            resp.setMarca(repuesto.getMarca());
+            resp.setModelo(repuesto.getModelo());
+            resp.setAnio(repuesto.getAnio());
+            resp.setValor(repuesto.getValor());
+
+            EmpresaDto empresa = new EmpresaDto();
+            empresa.setId(respEmpresa.get().getId());
+            empresa.setDireccion(respEmpresa.get().getDireccion());
+            empresa.setRut(respEmpresa.get().getRut());
+            empresa.setNombre(respEmpresa.get().getNombre());
+
+            resp.setEmpresa(empresa);
+
+            Set<ProveedorDto> proveedorDtoSet = new HashSet<>();
+            ProveedorDto proveedor = new ProveedorDto();
+            proveedor.setHabilitado(respProveedor.get().getHabilitado());
+            proveedor.setNombre(respProveedor.get().getNombre());
+            proveedor.setApellido(respProveedor.get().getApellido());
+            proveedor.setRut(respProveedor.get().getRut());
+            proveedor.setDireccion(respProveedor.get().getDireccion());
+            proveedor.setComuna(respProveedor.get().getComuna());
+            proveedor.setCiudad(respProveedor.get().getCiudad());
+            proveedor.setTelefono(respProveedor.get().getTelefono());
+            proveedor.setEmail(respProveedor.get().getEmail());
+            proveedor.setEmpresa(empresa);
+
+            proveedorDtoSet.add(proveedor);
+
+            resp.setProveedor(proveedorDtoSet);
+
+        }else{
+            return new ResponseEntity("Error Empresa no existe",HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity(resp, HttpStatus.OK);
+    }
+
+
     @PostMapping(path = "/insert",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

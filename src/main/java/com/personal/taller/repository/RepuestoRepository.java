@@ -22,6 +22,9 @@ public interface RepuestoRepository extends JpaRepository<RepuestoDto, Long> {
     @Query(value = "select * from repuesto r where r.codigo = :codigo", nativeQuery = true)
     RepuestoDto findByCodigo(String codigo);
 
+    @Query(value = "select * from repuesto r where r.rut_proveedor = :rut", nativeQuery = true)
+    RepuestoDto findByProveedor(String rut);
+
     //@Query(value="{category:'?0'}", fields="{'name' : 1, 'quantity' : 1}")
     //List<ClienteDto> findAll(String category);
 

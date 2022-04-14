@@ -144,4 +144,43 @@ public class ProveedorServiceImpl implements ProveedorService {
         }
         return new ResponseEntity(proveedor, HttpStatus.CREATED);
     }
+
+    public ResponseEntity update(ProveedorRequest newProveedor){
+        ProveedorDto proveedor = new ProveedorDto();
+        EmpresaDto empresaDto = new EmpresaDto();
+        Optional<EmpresaDto> respEmpresa = empresaRepository.findById(newProveedor.getIdEmpresa());
+        if(respEmpresa.isPresent()) {
+            proveedor.setId(newProveedor.getId());
+            proveedor.setHabilitado(newProveedor.getHabilitado());
+            proveedor.setApellido(newProveedor.getApellido());
+            proveedor.setCiudad(newProveedor.getCiudad());
+            proveedor.setComuna(newProveedor.getComuna());
+            proveedor.setDireccion(newProveedor.getDireccion());
+            proveedor.setEmail(newProveedor.getEmail());
+            proveedor.setNombre(newProveedor.getNombre());
+            proveedor.setRut(newProveedor.getRut());
+            proveedor.setTelefono(newProveedor.getTelefono());
+            proveedor.setEmpresa(respEmpresa.get());
+        }else{
+            return new ResponseEntity("Error Empresa no existe",HttpStatus.BAD_REQUEST);
+        }
+
+        proveedorRepository.save(proveedor);
+
+        return new ResponseEntity(proveedor, HttpStatus.CREATED);
+    }
+
+    public ResponseEntity delete(ProveedorDto newProveedor){
+        Optional<ProveedorDto> proveedor = proveedorRepository.findById(newProveedor.getId());
+        if(proveedor.isPresent()){
+            proveedor.get().setHabilitado(false);
+            proveedorRepository.save(proveedor.get());
+        }else{
+            return new ResponseEntity("Error proveedor no existe.",HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity(proveedor, HttpStatus.OK);
+
+    }
+
 }
