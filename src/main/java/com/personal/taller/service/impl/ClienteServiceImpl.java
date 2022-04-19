@@ -121,6 +121,15 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     public ResponseEntity createClient(ClienteRequest newCliente){
+
+        Optional<ClienteDto> clienteDtoOptional = clienteRepository.findByRutAndHabilitadoAndEmpresa(newCliente.getRut(), newCliente.getIdEmpresa());
+        if (clienteDtoOptional.isPresent()){
+            if (!clienteDtoOptional.get().getHabilitado()){
+                return new ResponseEntity("Cliente ya se encuentra registrado y esta deshabilitado",HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity("Cliente ya existe para esta empresa",HttpStatus.BAD_REQUEST);
+        }
+
         ClienteDto cliente = new ClienteDto();
         Optional<EmpresaDto> respEmpresa = empresaRepository.findById(newCliente.getIdEmpresa());
 

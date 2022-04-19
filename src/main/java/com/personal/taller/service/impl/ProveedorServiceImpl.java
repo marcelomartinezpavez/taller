@@ -1,5 +1,6 @@
 package com.personal.taller.service.impl;
 
+import com.personal.taller.dto.ClienteDto;
 import com.personal.taller.dto.EmpresaDto;
 import com.personal.taller.dto.ProveedorDto;
 import com.personal.taller.repository.EmpresaRepository;
@@ -120,6 +121,15 @@ public class ProveedorServiceImpl implements ProveedorService {
     }
 
     public ResponseEntity create(ProveedorRequest newProveedor){
+
+        Optional<ProveedorDto> proveedorDtoOptional = proveedorRepository.findByRutAndHabilitadoAndIdEmpresa(newProveedor.getRut(), newProveedor.getIdEmpresa());
+        if (proveedorDtoOptional.isPresent()){
+            if (!proveedorDtoOptional.get().getHabilitado()){
+                return new ResponseEntity("Proveedor ya se encuentra registrado y esta deshabilitado",HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity("Proveedor ya existe para esta empresa",HttpStatus.BAD_REQUEST);
+        }
+
         ProveedorDto proveedor = new ProveedorDto();
         Optional<EmpresaDto> respEmpresa = empresaRepository.findById(newProveedor.getIdEmpresa());
 
