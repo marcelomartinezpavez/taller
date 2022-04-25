@@ -78,11 +78,39 @@ public class VehiculoController {
             vehResp.setAnio(vehiculo.getAnio());
             vehResp.setPatente(vehiculo.getPatente());
             vehRespList.add(vehResp);
+
+            Set<ClienteDto> clienteDtoSet = new HashSet<>();
+            for (ClienteDto clienteDto: vehiculo.getCliente()){
+                ClienteDto clte = new ClienteDto();
+                clte.setId(clienteDto.getId());
+                clte.setApellido(clienteDto.getApellido());
+                clte.setHabilitado(clienteDto.getHabilitado());
+                clte.setDireccion(clienteDto.getDireccion());
+                clte.setCiudad(clienteDto.getCiudad());
+                clte.setNombre(clienteDto.getNombre());
+                clte.setRut(clienteDto.getRut());
+                clte.setComuna(clienteDto.getComuna());
+                clte.setEmail(clienteDto.getEmail());
+                clte.setTelefono(clienteDto.getTelefono());
+
+                EmpresaDto empresaDto = new EmpresaDto();
+                empresaDto.setId(clienteDto.getEmpresa().getId());
+                empresaDto.setNombre(clienteDto.getEmpresa().getNombre());
+                empresaDto.setRut(clienteDto.getEmpresa().getRut());
+                empresaDto.setDireccion(clienteDto.getEmpresa().getDireccion());
+
+                clte.setEmpresa(empresaDto);
+                clienteDtoSet.add(clte);
+            }
+
+            vehResp.setCliente(clienteDtoSet);
+
+
         }
 
-        VehiculoResponse vehiculoResponse = new VehiculoResponse();
-        vehiculoResponse.setVehiculoDtoList(vehRespList);
-        return new ResponseEntity<>(vehiculoResponse, HttpStatus.OK);
+        //VehiculoResponse vehiculoResponse = new VehiculoResponse();
+        //vehiculoResponse.setVehiculoDtoList(vehRespList);
+        return new ResponseEntity<>(vehRespList, HttpStatus.OK);
 
     }
 
@@ -107,6 +135,31 @@ public class VehiculoController {
         vehResp.setAnio(vehiculo.getAnio());
         vehResp.setPatente(vehiculo.getPatente());
 
+        Set<ClienteDto> clienteDtoSet = new HashSet<>();
+        for (ClienteDto clienteDto: vehiculo.getCliente()){
+            ClienteDto clte = new ClienteDto();
+            clte.setId(clienteDto.getId());
+            clte.setApellido(clienteDto.getApellido());
+            clte.setHabilitado(clienteDto.getHabilitado());
+            clte.setDireccion(clienteDto.getDireccion());
+            clte.setCiudad(clienteDto.getCiudad());
+            clte.setNombre(clienteDto.getNombre());
+            clte.setRut(clienteDto.getRut());
+            clte.setComuna(clienteDto.getComuna());
+            clte.setEmail(clienteDto.getEmail());
+            clte.setTelefono(clienteDto.getTelefono());
+
+            EmpresaDto empresaDto = new EmpresaDto();
+            empresaDto.setId(clienteDto.getEmpresa().getId());
+            empresaDto.setNombre(clienteDto.getEmpresa().getNombre());
+            empresaDto.setRut(clienteDto.getEmpresa().getRut());
+            empresaDto.setDireccion(clienteDto.getEmpresa().getDireccion());
+
+            clte.setEmpresa(empresaDto);
+            clienteDtoSet.add(clte);
+        }
+
+        vehResp.setCliente(clienteDtoSet);
         return new ResponseEntity(vehResp,HttpStatus.OK);
     }
 

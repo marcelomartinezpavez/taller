@@ -20,10 +20,12 @@ public interface VehiculoRepository extends JpaRepository<VehiculoDto, Long> {
 
 
     //@Query("{patente:'?0'}")
-    @Query(value = "select * from vehiculo v where v.patente = :patente ", nativeQuery = true)
+    @Query(value = "select * from vehiculo v FULL JOIN clientes as c on v.rut_dueno = c.rut " +
+            "JOIN empresa e ON c.empresa_id = e.id " +
+            "where v.patente = :patente " , nativeQuery = true)
     VehiculoDto findByPatente(String patente);
 
-    @Query(value = "select * from vehiculo as v FULL JOIN clientes as c on v.rut_dueno = c.rut " +
+    @Query(value = "select * from vehiculo v FULL JOIN clientes as c on v.rut_dueno = c.rut " +
             "where v.patente = :patente " +
             "and c.empresa_id = :idEmpresa ", nativeQuery = true)
     VehiculoDto findByPatenteAndEmpresa(String patente, long idEmpresa);
