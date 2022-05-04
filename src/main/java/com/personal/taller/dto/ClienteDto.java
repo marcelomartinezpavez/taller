@@ -43,7 +43,7 @@ public class ClienteDto implements Serializable {
     @Column(name = "ordenTrabajo")
     private Set<OrdenTrabajoDto> ordenTrabajo;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @Column(name = "vehiculo")
     private Set<VehiculoDto> vehiculo;
 

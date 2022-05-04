@@ -39,7 +39,7 @@ public class VehiculoDto implements Serializable {
     @Column(name = "kilometraje")
     private String kilometraje;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @Column(name = "cliente")
     private Set<ClienteDto> cliente;
 
