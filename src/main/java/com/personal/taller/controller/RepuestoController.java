@@ -146,6 +146,15 @@ public class RepuestoController {
         return new ResponseEntity(resp, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/empresa/{idEmpresa}", produces = "application/json")
+    @CrossOrigin(origins = "*")
+    public @ResponseBody
+    ResponseEntity getRepuesto(@PathVariable long idEmpresa){
+        List<RepuestoDto> repuestoDtoSet = repuestoRepository.findByEmpresa(idEmpresa);
+        return new ResponseEntity(repuestoDtoSet, HttpStatus.OK);
+    }
+
+
     @GetMapping(value = "/proveedor/{rut}", produces = "application/json")
     @CrossOrigin(origins = "*")
     public @ResponseBody
