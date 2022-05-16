@@ -37,7 +37,7 @@ public class ProveedorDto implements Serializable {
     @JoinColumn(name = "empresa_id")
     private EmpresaDto empresa;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @Column(name = "repuesto")
     private Set<RepuestoDto> repuesto;
 
