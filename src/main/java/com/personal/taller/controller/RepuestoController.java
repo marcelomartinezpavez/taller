@@ -7,7 +7,6 @@ import com.personal.taller.repository.EmpresaRepository;
 import com.personal.taller.repository.ProveedorRepository;
 import com.personal.taller.repository.RepuestoRepository;
 import com.personal.taller.request.RepuestoRequest;
-import com.personal.taller.response.RepuestoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,11 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Controller
 @RequestMapping("repuesto")
@@ -154,56 +150,71 @@ public class RepuestoController {
     @CrossOrigin(origins = "*")
     public @ResponseBody
     ResponseEntity getRepuestoProveedor(@PathVariable String rut) {
-        RepuestoDto repuesto = repuestoRepository.findByProveedor(rut);
+        Set<RepuestoDto> repuestoDtoSet = repuestoRepository.findByProveedor(rut);
+        boolean errorProveedor = false;
+        boolean errorEmpresa = false;
+        List<RepuestoDto> repuestosDtoList = new ArrayList<RepuestoDto>();
 
-        RepuestoDto resp = new RepuestoDto();
+        for (RepuestoDto repuesto : repuestoDtoSet) {
+            RepuestoDto resp = new RepuestoDto();
+            Optional<EmpresaDto> respEmpresa = empresaRepository.findById(repuesto.getEmpresa().getId());
+            Optional<ProveedorDto> respProveedor = proveedorRepository.findByRutAndHabilitadoAndIdEmpresa(repuesto.getRutProveedor(), repuesto.getEmpresa().getId());
 
-        Optional<EmpresaDto> respEmpresa = empresaRepository.findById(repuesto.getEmpresa().getId());
-        Optional<ProveedorDto> respProveedor = proveedorRepository.findByRutAndHabilitadoAndIdEmpresa(repuesto.getRutProveedor(), repuesto.getEmpresa().getId());
+            if (!respProveedor.isPresent()) {
+                errorProveedor = true;
+                break;
+            }
 
-        if(!respProveedor.isPresent()){
+            if (respEmpresa.isPresent()) {
+                resp.setHabilitado(repuesto.getHabilitado());
+                resp.setNombre(repuesto.getNombre());
+                resp.setCodigo(repuesto.getCodigo());
+                resp.setMarca(repuesto.getMarca());
+                resp.setModelo(repuesto.getModelo());
+                resp.setAnio(repuesto.getAnio());
+                resp.setValor(repuesto.getValor());
+
+                EmpresaDto empresa = new EmpresaDto();
+                empresa.setId(respEmpresa.get().getId());
+                empresa.setDireccion(respEmpresa.get().getDireccion());
+                empresa.setRut(respEmpresa.get().getRut());
+                empresa.setNombre(respEmpresa.get().getNombre());
+
+                resp.setEmpresa(empresa);
+
+                Set<ProveedorDto> proveedorDtoSet = new HashSet<>();
+                ProveedorDto proveedor = new ProveedorDto();
+                proveedor.setHabilitado(respProveedor.get().getHabilitado());
+                proveedor.setNombre(respProveedor.get().getNombre());
+                proveedor.setApellido(respProveedor.get().getApellido());
+                proveedor.setRut(respProveedor.get().getRut());
+                proveedor.setDireccion(respProveedor.get().getDireccion());
+                proveedor.setComuna(respProveedor.get().getComuna());
+                proveedor.setCiudad(respProveedor.get().getCiudad());
+                proveedor.setTelefono(respProveedor.get().getTelefono());
+                proveedor.setEmail(respProveedor.get().getEmail());
+                proveedor.setEmpresa(empresa);
+
+                proveedorDtoSet.add(proveedor);
+
+                resp.setProveedor(proveedorDtoSet);
+                repuestosDtoList.add(resp);
+            } else {
+                errorEmpresa = true;
+                break;
+            }
+        }
+
+        if(errorProveedor){
             return new ResponseEntity("Error Proveedor no existe",HttpStatus.BAD_REQUEST);
         }
 
-        if(respEmpresa.isPresent()) {
-            resp.setHabilitado(repuesto.getHabilitado());
-            resp.setNombre(repuesto.getNombre());
-            resp.setCodigo(repuesto.getCodigo());
-            resp.setMarca(repuesto.getMarca());
-            resp.setModelo(repuesto.getModelo());
-            resp.setAnio(repuesto.getAnio());
-            resp.setValor(repuesto.getValor());
-
-            EmpresaDto empresa = new EmpresaDto();
-            empresa.setId(respEmpresa.get().getId());
-            empresa.setDireccion(respEmpresa.get().getDireccion());
-            empresa.setRut(respEmpresa.get().getRut());
-            empresa.setNombre(respEmpresa.get().getNombre());
-
-            resp.setEmpresa(empresa);
-
-            Set<ProveedorDto> proveedorDtoSet = new HashSet<>();
-            ProveedorDto proveedor = new ProveedorDto();
-            proveedor.setHabilitado(respProveedor.get().getHabilitado());
-            proveedor.setNombre(respProveedor.get().getNombre());
-            proveedor.setApellido(respProveedor.get().getApellido());
-            proveedor.setRut(respProveedor.get().getRut());
-            proveedor.setDireccion(respProveedor.get().getDireccion());
-            proveedor.setComuna(respProveedor.get().getComuna());
-            proveedor.setCiudad(respProveedor.get().getCiudad());
-            proveedor.setTelefono(respProveedor.get().getTelefono());
-            proveedor.setEmail(respProveedor.get().getEmail());
-            proveedor.setEmpresa(empresa);
-
-            proveedorDtoSet.add(proveedor);
-
-            resp.setProveedor(proveedorDtoSet);
-
-        }else{
+        if(errorEmpresa){
             return new ResponseEntity("Error Empresa no existe",HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity(resp, HttpStatus.OK);
+
+        return new ResponseEntity(repuestosDtoList, HttpStatus.OK);
     }
 
 

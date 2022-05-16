@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface RepuestoRepository extends JpaRepository<RepuestoDto, Long> {
@@ -23,7 +24,7 @@ public interface RepuestoRepository extends JpaRepository<RepuestoDto, Long> {
     RepuestoDto findByCodigo(String codigo);
 
     @Query(value = "select * from repuesto r where r.rut_proveedor = :rut", nativeQuery = true)
-    RepuestoDto findByProveedor(String rut);
+    Set<RepuestoDto> findByProveedor(String rut);
 
     //@Query(value="{category:'?0'}", fields="{'name' : 1, 'quantity' : 1}")
     //List<ClienteDto> findAll(String category);
