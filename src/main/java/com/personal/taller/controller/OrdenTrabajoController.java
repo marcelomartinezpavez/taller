@@ -214,7 +214,7 @@ public class OrdenTrabajoController {
             otResponse.setEmpresa(empresa);
 
             Set<DetalleDto> detalleSet = new HashSet();
-            newOrdenTrabajo.getDetalleDtoList().forEach(detalle -> {
+            newOrdenTrabajo.getDetalle().forEach(detalle -> {
                 DetalleDto detalleDto = new DetalleDto();
                 detalleDto.setDescripcion(detalle.getDescripcion());
                 detalleDto.setRecargo(detalle.getRecargo());
@@ -326,7 +326,7 @@ public class OrdenTrabajoController {
             otResponse.setEmpresa(empresa);
 
             Set<DetalleDto> detalleSet = new HashSet();
-            newOrdenTrabajo.getDetalleDtoList().forEach(detalle -> {
+            newOrdenTrabajo.getDetalle().forEach(detalle -> {
                 DetalleDto detalleDto = new DetalleDto();
                 detalleDto.setDescripcion(detalle.getDescripcion());
                 detalleDto.setRecargo(detalle.getRecargo());

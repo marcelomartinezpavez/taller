@@ -16,7 +16,7 @@ public class OrdenTrabajoRequest {
     private long valorOt;
 
     private long idEmpresa;
-    private List<DetalleRequest> detalleDtoList;
+    private List<DetalleRequest> detalle;
 
     public long getId() {
         return id;
@@ -90,11 +90,11 @@ public class OrdenTrabajoRequest {
         this.idEmpresa = idEmpresa;
     }
 
-    public List<DetalleRequest> getDetalleDtoList() {
-        return detalleDtoList;
+    public List<DetalleRequest> getDetalle() {
+        return detalle;
     }
 
-    public void setDetalleDtoList(List<DetalleRequest> detalleDtoList) {
-        this.detalleDtoList = detalleDtoList;
+    public void setDetalle(List<DetalleRequest> detalle) {
+        this.detalle = detalle;
     }
 }
