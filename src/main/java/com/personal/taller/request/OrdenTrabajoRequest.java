@@ -9,7 +9,6 @@ public class OrdenTrabajoRequest {
     private long id;
     private String numeroOrden;
     private boolean habilitado;
-    private String fechaIngreso;
     private String rutCliente;
     private String patenteVehiculo;
     private String codigo;
@@ -40,14 +39,6 @@ public class OrdenTrabajoRequest {
 
     public void setHabilitado(boolean habilitado) {
         this.habilitado = habilitado;
-    }
-
-    public String getFechaIngreso() {
-        return fechaIngreso;
-    }
-
-    public void setFechaIngreso(String fechaIngreso) {
-        this.fechaIngreso = fechaIngreso;
     }
 
     public String getRutCliente() {
