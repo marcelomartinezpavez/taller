@@ -27,6 +27,8 @@ public class OrdenTrabajoDto implements Serializable {
     private String codigo;
     @Column(name = "valorOt")
     private long valorOt;
+    @Column(name = "estado")
+    private String estado;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "vehiculo_id", referencedColumnName = "id")
@@ -164,5 +166,17 @@ public class OrdenTrabajoDto implements Serializable {
 
     public void setCliente(ClienteDto cliente) {
         this.cliente = cliente;
+    }
+
+    public boolean isHabilitado() {
+        return habilitado;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

@@ -147,7 +147,7 @@ public class OrdenTrabajoController {
 
         //TODO confirmar que al asociar vehiculo con ot y clientes que siempre todos correspondan a la misma empresa.
 
-        //FIXME ESTADOS Tipos de ot abirtas finalizadas en proceso
+        //FIXME ESTADOS Tipos de ot abiertas, finalizadas
 
         OrdenTrabajoDto otResponse = new OrdenTrabajoDto();
         try {
@@ -165,6 +165,7 @@ public class OrdenTrabajoController {
             String fechaActual = dtf.format(LocalDateTime.now());
 
             otResponse.setHabilitado(true);
+            otResponse.setEstado("ABIERTAS");
             otResponse.setFechaIngreso(fechaActual);
             otResponse.setRutCliente(newOrdenTrabajo.getRutCliente());
             ClienteDto cl = new ClienteDto();
