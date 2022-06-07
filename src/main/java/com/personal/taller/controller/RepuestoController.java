@@ -175,6 +175,7 @@ public class RepuestoController {
             }
 
             if (respEmpresa.isPresent()) {
+                resp.setId(repuesto.getId());
                 resp.setHabilitado(repuesto.getHabilitado());
                 resp.setNombre(repuesto.getNombre());
                 resp.setCodigo(repuesto.getCodigo());
