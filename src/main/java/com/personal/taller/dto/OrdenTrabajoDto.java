@@ -29,6 +29,8 @@ public class OrdenTrabajoDto implements Serializable {
     private long valorOt;
     @Column(name = "estado")
     private String estado;
+    @Column(name = "fechaCerrado")
+    private String fechaCerrado;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "vehiculo_id", referencedColumnName = "id")
@@ -178,5 +180,13 @@ public class OrdenTrabajoDto implements Serializable {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getFechaCerrado() {
+        return fechaCerrado;
+    }
+
+    public void setFechaCerrado(String fechaCerrado) {
+        this.fechaCerrado = fechaCerrado;
     }
 }

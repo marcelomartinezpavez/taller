@@ -56,8 +56,6 @@ public class LoginController {
         }
     }
 
-    /*FIXME, AGREGAR METODO QUE PERMITA CREAR USUARIO POR EMPRESA*/
-
     @PostMapping(path = "/create",produces = "application/json")
     @CrossOrigin(origins = "*")
     public @ResponseBody

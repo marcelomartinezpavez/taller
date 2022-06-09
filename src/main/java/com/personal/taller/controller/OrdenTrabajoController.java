@@ -145,10 +145,6 @@ public class OrdenTrabajoController {
     public ResponseEntity<OrdenTrabajoDto> create(@RequestBody OrdenTrabajoRequest newOrdenTrabajo) {
         System.out.println("INSERT OT");
 
-        //TODO confirmar que al asociar vehiculo con ot y clientes que siempre todos correspondan a la misma empresa.
-
-        //FIXME ESTADOS Tipos de ot abiertas, finalizadas
-
         OrdenTrabajoDto otResponse = new OrdenTrabajoDto();
         try {
             EmpresaDto empresaDto = empresaRepository.getById(newOrdenTrabajo.getIdEmpresa());
@@ -262,6 +258,7 @@ public class OrdenTrabajoController {
     @CrossOrigin(origins = "*")
     public ResponseEntity<OrdenTrabajoDto> update(@RequestBody OrdenTrabajoRequest newOrdenTrabajo) {
         OrdenTrabajoDto otResponse = new OrdenTrabajoDto();
+
         try {
             EmpresaDto empresaDto = empresaRepository.getById(newOrdenTrabajo.getIdEmpresa());
             VehiculoDto vehiculoDto = vehiculoRepository.findByPatenteAndEmpresa(newOrdenTrabajo.getPatenteVehiculo(), newOrdenTrabajo.getIdEmpresa());
@@ -273,12 +270,15 @@ public class OrdenTrabajoController {
             empresa.setRut(empresaDto.getRut());
             empresa.setId(empresaDto.getId());
 
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-            String fechaActual = dtf.format(LocalDateTime.now());
-
             otResponse.setId(newOrdenTrabajo.getId());
             otResponse.setHabilitado(newOrdenTrabajo.getHabilitado());
-            otResponse.setFechaIngreso(fechaActual);
+            otResponse.setEstado(newOrdenTrabajo.getEstado());
+            if(newOrdenTrabajo.getEstado().toUpperCase().equalsIgnoreCase("CERRADO")){
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                String fechaCerrado = dtf.format(LocalDateTime.now());
+                otResponse.setFechaCerrado(fechaCerrado);
+            }
+            //otResponse.setFechaIngreso(fechaActual);
             otResponse.setRutCliente(newOrdenTrabajo.getRutCliente());
             ClienteDto cl = new ClienteDto();
             if(clienteDto.isPresent()){

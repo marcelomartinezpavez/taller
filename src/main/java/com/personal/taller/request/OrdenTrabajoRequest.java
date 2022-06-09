@@ -13,6 +13,7 @@ public class OrdenTrabajoRequest {
     private String patenteVehiculo;
     private String codigo;
     private long valorOt;
+    private String estado;
 
     private long idEmpresa;
     private List<DetalleRequest> detalle;
@@ -87,5 +88,17 @@ public class OrdenTrabajoRequest {
 
     public void setDetalle(List<DetalleRequest> detalle) {
         this.detalle = detalle;
+    }
+
+    public boolean isHabilitado() {
+        return habilitado;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }
