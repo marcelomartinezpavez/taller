@@ -264,6 +264,12 @@ public class OrdenTrabajoController {
             VehiculoDto vehiculoDto = vehiculoRepository.findByPatenteAndEmpresa(newOrdenTrabajo.getPatenteVehiculo(), newOrdenTrabajo.getIdEmpresa());
             Optional<ClienteDto> clienteDto = clienteRepository.findByRutAndHabilitadoAndEmpresa(newOrdenTrabajo.getRutCliente(), newOrdenTrabajo.getIdEmpresa());
 
+            Optional<OrdenTrabajoDto> ot = ordenTrabajoRepository.findById(newOrdenTrabajo.getId());
+
+            if(!ot.isPresent()){
+                return new ResponseEntity("No existe orden de trabajo para editar",HttpStatus.NOT_FOUND);
+            }
+
             EmpresaDto empresa = new EmpresaDto();
             empresa.setNombre(empresaDto.getNombre());
             empresa.setDireccion(empresaDto.getDireccion());
@@ -278,7 +284,7 @@ public class OrdenTrabajoController {
                 String fechaCerrado = dtf.format(LocalDateTime.now());
                 otResponse.setFechaCerrado(fechaCerrado);
             }
-            //otResponse.setFechaIngreso(fechaActual);
+            otResponse.setFechaIngreso(ot.get().getFechaIngreso());
             otResponse.setRutCliente(newOrdenTrabajo.getRutCliente());
             ClienteDto cl = new ClienteDto();
             if(clienteDto.isPresent()){
