@@ -95,7 +95,15 @@ public class RepuestoController {
     @CrossOrigin(origins = "*")
     public @ResponseBody
     ResponseEntity getRepuesto(@PathVariable String codigo) {
-        RepuestoDto repuesto = repuestoRepository.findByCodigo(codigo);
+        RepuestoDto repuesto = null;
+        try {
+            repuesto = repuestoRepository.findByCodigo(codigo);
+            if (repuesto == null){
+                return new ResponseEntity("El repuesto no existe", HttpStatus.NO_CONTENT);
+            }
+        } catch (NullPointerException npe){
+            return new ResponseEntity("El repuesto no existe", HttpStatus.NO_CONTENT);
+        }
         RepuestoDto resp = new RepuestoDto();
 
         Optional<EmpresaDto> respEmpresa = empresaRepository.findById(repuesto.getEmpresa().getId());

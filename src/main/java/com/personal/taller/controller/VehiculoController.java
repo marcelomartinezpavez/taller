@@ -53,7 +53,7 @@ public class VehiculoController {
 
         VehiculoResponse vehiculoResponse = new VehiculoResponse();
         vehiculoResponse.setVehiculoDtoList(vehRespList);
-        return new ResponseEntity<>(vehiculoResponse, HttpStatus.OK);
+        return new ResponseEntity<>(vehRespList, HttpStatus.OK);
     }
 
     @GetMapping(value = "/cliente/{rutCliente}", produces = "application/json")
